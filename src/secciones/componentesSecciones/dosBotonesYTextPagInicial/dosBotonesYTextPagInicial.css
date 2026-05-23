@@ -1,0 +1,42 @@
+.divSeccionDosBotonesYTextPagInicial{
+    width: 100%;
+    background-color: rgb(193, 233, 182);
+    display: block;
+    justify-items: center;
+    align-content: center;
+}
+
+.tituloSeccionDosBotonesYTextPagInicial{
+    font-size: 35px;
+    margin: 10px;
+    color: rgb(65, 105, 70);
+    text-align: center;
+}
+
+.botonesSeccionDosBotonesYTextPagInicial{
+    margin-top: 20px;
+    padding-bottom: 20px;
+    width: 250px;
+    display: flex;
+    justify-content: space-around;
+}
+.textoSeccionDosBotonesYTextPagInicial{
+    margin: 15px;
+}
+
+.botonesSeccionDosBotonesYTextPagInicial > button{
+    text-decoration: none;
+    border: 2px solid rgb(65, 105, 70);
+    padding: 8px 15px;
+    border-radius: 25px;
+    color: rgb(65, 105, 70);
+    background-color:   #F4F7F2; 
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.botonesSeccionDosBotonesYTextPagInicial > button:hover{
+    border: 2px solid #F4F7F2;
+    color:  #F4F7F2;
+    background-color:   rgb(65, 105, 70);
+}

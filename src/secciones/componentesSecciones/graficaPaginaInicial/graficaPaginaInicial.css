@@ -1,0 +1,82 @@
+/* Contenedor principal de la tarjeta */
+.tarjeta-progreso {
+    background-color: #1e1e1e; /* Gris muy oscuro */
+    border-radius: 16px;
+    margin: 20px;
+    padding: 24px;
+    width: 93%;
+    max-width: 600px;
+    color: white;
+    font-family: system-ui, -apple-system, sans-serif;
+    box-sizing: border-box;
+}
+
+/* --- Cabecera --- */
+.cabecera-progreso {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.titulos {
+    display: flex;
+    flex-direction: column;
+}
+
+.subtitulo {
+    font-size: 14px;
+    color: #a0a0a0;
+    margin-bottom: 4px;
+}
+
+.titulo-principal {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.etiqueta-mejora {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* --- Gráfica --- */
+.contenedor-grafica {
+    height: 150px; /* Altura de la gráfica */
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+/* --- Estadísticas Inferiores --- */
+.estadisticas-inferiores {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.stat-box {
+    background-color: #2a2a2a; /* Un gris un poco más claro que el fondo */
+    flex: 1;
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #a0a0a0;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+}
