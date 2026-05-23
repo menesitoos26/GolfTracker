@@ -1,7 +1,5 @@
 .fondoInicial{
-    background-image: image-set(
-        url("public/fondo2.jpg") 
-    );
+    background-image: url('/fondo2.jpg');
     height: 100%;
     width: 100%;
     z-index: -100;
