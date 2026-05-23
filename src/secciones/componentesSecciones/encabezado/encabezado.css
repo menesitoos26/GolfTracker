@@ -1,0 +1,136 @@
+/* --- VARIABLES --- */
+:root {
+  --verde-header: rgb(65, 105, 70); /* Un verde similar al de tu foto */
+  --verde-oscuro: rgb(45, 80, 50); /* Para el hover y fondo móvil */
+  --blanco-crema: #F4F7F2;
+  --verde-brillante: rgb(193, 233, 182); /* El color de tus botones anteriores */
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.encabezado-container {
+  box-sizing: border-box; /* Previene el problema de desbordamiento horizontal */
+  width: 100%;
+  height: 80px;
+  background-color: var(--verde-header);
+  display: flex;
+  justify-content: space-between; /* Logo a la izq, menú a la der */
+  align-items: center;
+  padding: 0 40px; /* Márgenes laterales */
+  color: var(--blanco-crema);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra elegante */
+  position: relative; /* Importante para el menú móvil */
+}
+
+/* --- LOGO --- */
+.encabezado-logo a {
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--blanco-crema);
+}
+
+/* --- NAVEGACIÓN Y ENLACES (ESCRITORIO) --- */
+.encabezado-nav {
+  display: flex;
+  align-items: center;
+  gap: 40px; /* Separación entre los links y el botón */
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 25px; /* Separación entre links */
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--blanco-crema);
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--verde-brillante);
+}
+
+/* --- BOTÓN INICIO SESIÓN --- */
+.btn-inicio-sesion {
+  text-decoration: none;
+  border: 1.5px solid var(--blanco-crema);
+  padding: 8px 24px;
+  border-radius: 25px;
+  color: var(--blanco-crema);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-inicio-sesion:hover {
+  background-color: var(--blanco-crema);
+  color: var(--verde-header); /* Se invierten los colores al pasar el ratón */
+}
+
+/* --- BOTÓN HAMBURGUESA (Oculto en escritorio) --- */
+.menu-hamburguesa {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--blanco-crema);
+  font-size: 28px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+/* =========================================
+   DISEÑO RESPONSIVO (PANTALLAS < 768px)
+   ========================================= */
+@media (max-width: 768px) {
+  .encabezado-container {
+    padding: 0 20px; /* Menos espacio en los bordes en móviles */
+  }
+
+  /* 1. Mostrar el botón hamburguesa */
+  .menu-hamburguesa {
+    display: block;
+  }
+
+  /* 2. Convertir la barra de navegación en un panel lateral o desplegable */
+  .encabezado-nav {
+    position: absolute;
+    top: 80px; /* Justo debajo del header */
+    left: -100%; /* Oculto fuera de la pantalla por defecto */
+    width: 100%;
+    height: calc(100vh - 80px); /* Ocupa el resto de la pantalla */
+    background-color: var(--verde-oscuro);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 40px;
+    gap: 30px;
+    transition: left 0.4s ease-in-out; /* Animación de entrada suave */
+    z-index: 999;
+  }
+
+  /* 3. Clase dinámica: cuando el estado en React es 'true', el panel se desliza */
+  .encabezado-nav.abierto {
+    left: 0;
+  }
+
+  /* 4. Ajustar los enlaces para móvil */
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 30px;
+  }
+
+  .nav-links a {
+    font-size: 20px;
+  }
+
+  .btn-inicio-sesion {
+    font-size: 18px;
+    padding: 12px 40px;
+  }
+}
