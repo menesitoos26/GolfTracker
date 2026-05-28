@@ -1,0 +1,132 @@
+
+/* --- CONTENEDOR PRINCIPAL DE LA SECCIÓN --- */
+.usuarioSeccion {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: calc(100vh - 80px); /* Resta la altura del encabezado */
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10; /* Asegura que se pinte por encima del fondo absoluto */
+}
+
+/* --- CUADRÍCULA DE LOS RECUADROS --- */
+.usuario-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 150px); /* 3 columnas de 150px según tu mockup */
+    gap: 25px; /* Separación entre tarjetas */
+    max-width: 1200px;
+    width: 100%;
+    justify-content: center;
+}
+
+/* --- ESTILO DE CADA RECUADRO DE DATOS --- */
+.tarjeta-dato {
+    background-color: rgb(54, 94, 58); /* Tu color verde oscuro principal */
+    border: 2px solid rgb(193, 233, 182); /* Borde verde clarito brillante */
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto sutil al pasar el cursor */
+.tarjeta-dato:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(193, 233, 182, 0.2);
+}
+
+/* Icono decorativo del recuadro */
+.tarjeta-icono {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.tarjeta-contenido h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgb(193, 233, 182); /* Letras secundarias en verde clarito */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tarjeta-valor {
+    margin: 8px 0 0 0;
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff; /* El número grande destaca en blanco */
+}
+
+/* --- FONDO ABSOLUTO (Mantenemos tu clase original impecable) --- */
+.FondoUsuarioSeccion {
+    background-image: image-set(
+        url("/fondoUser.jpg") 
+    );
+    height: 100vh;
+    width: 100%;
+    z-index: -100;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: fill;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* --- DISEÑO RESPONSIVO (MÓVILES) --- */
+@media (max-width: 768px) {
+    .usuarioSeccion {
+        padding-top: 40px;
+    }
+    
+    .usuario-stats-grid {
+        grid-template-columns: 1fr; /* En pantallas pequeñas se pone un recuadro debajo de otro */
+        max-width: 300px;
+        gap: 15px;
+    }
+    
+    .tarjeta-dato {
+        flex-direction: row; /* Se vuelve horizontal en el móvil para que ocupe menos espacio vertical */
+        justify-content: flex-start;
+        gap: 20px;
+        padding: 15px 20px;
+        text-align: left;
+    }
+
+    .tarjeta-icono {
+        margin-bottom: 0;
+    }
+
+    .tarjeta-contenido h3 {
+        font-size: 11px;
+    }
+
+    .tarjeta-valor {
+        font-size: 22px;
+        margin-top: 2px;
+    }
+}
+.FondoUsuarioSeccion{
+    background-image: image-set(
+        url("/fondoUser.jpg") 
+    );
+    height: 100vh;
+    width: 100%;
+    z-index: -100;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: fill;
+    background-size: cover;
+    background-position: center;
+        background-repeat: no-repeat;
+}

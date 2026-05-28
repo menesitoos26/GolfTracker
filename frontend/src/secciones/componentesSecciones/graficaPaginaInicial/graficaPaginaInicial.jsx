@@ -3,7 +3,7 @@ import { LineChart, Line, ResponsiveContainer, CartesianGrid, Tooltip } from 're
 import './graficaPaginaInicial.css';
 
 // Ahora el componente recibe "datos" y el "handicapActual" como propiedades (props)
-function GraficaPaginaInicial({ datos, handicapActual }) {
+function GraficaPaginaInicial({ datos, handicapActual, nombreUser}) {
   
   // CONTROL DE SEGURIDAD: Si no hay datos todavía, mostramos un mensaje de carga
   if (!datos || datos.length === 0) {
@@ -38,12 +38,34 @@ function GraficaPaginaInicial({ datos, handicapActual }) {
       <div className="cabecera-progreso">
         <div className="titulos">
           <span className="subtitulo">Tu progreso</span>
-          <h2 className="titulo-principal">Handicap {handicapActual}</h2>
+          <h2 className="titulo-principal">Bienvenido {nombreUser}</h2>
         </div>
         
         {/* Etiqueta de rendimiento dinámica (Verde si bajó o se mantuvo, Roja si subió) */}
-        <div className={`etiqueta-mejora ${esMejora ? 'mejora' : 'empeora'}`}>
-          {esMejora ? '📉' : '📈'} {diferencia > 0 ? `+${diferencia}` : diferencia} este periodo
+        <div className="nuevaRonda">
+          <button>
+              + Nueva ronda
+          </button>
+        </div>
+      </div>
+
+            {/* Estadísticas calculadas automáticamente */}
+      <div className="estadisticas-inferiores">
+        <div className="stat-box">
+          <span className="stat-label">Handicap Actual</span>
+          <span className="stat-value">{handicapActual}</span>
+        </div>
+        <div className="stat-box">
+          <span className="stat-label">Rondas</span>
+          <span className="stat-value">{totalRondas}</span>
+        </div>
+        <div className="stat-box">
+          <span className="stat-label">Mejor Hcp</span>
+          <span className="stat-value">{mejorHandicap}</span>
+        </div>
+        <div className="stat-box">
+          <span className="stat-label">Media Hcp</span>
+          <span className="stat-value">{mediaHandicap}</span>
         </div>
       </div>
 
@@ -69,21 +91,7 @@ function GraficaPaginaInicial({ datos, handicapActual }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Estadísticas inferiores calculadas automáticamente */}
-      <div className="estadisticas-inferiores">
-        <div className="stat-box">
-          <span className="stat-label">Rondas</span>
-          <span className="stat-value">{totalRondas}</span>
-        </div>
-        <div className="stat-box">
-          <span className="stat-label">Mejor Hcp</span>
-          <span className="stat-value">{mejorHandicap}</span>
-        </div>
-        <div className="stat-box">
-          <span className="stat-label">Media Hcp</span>
-          <span className="stat-value">{mediaHandicap}</span>
-        </div>
-      </div>
+
 
     </div>
   );

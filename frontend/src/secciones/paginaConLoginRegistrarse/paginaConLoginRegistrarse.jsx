@@ -2,7 +2,7 @@ import Login from '../login/login'
 import './paginaConLoginRegistrarse.css'
 import Registrarse from '../registrarse/registrarse';
 import PaginaInicial from '../paginaInicial/paginaInicial'
-
+import PaginaUsuario from '../paginaUsuario/paginaUsuario'
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -51,6 +51,13 @@ function PaginaLR() {
               <PageTransition>
                 <Registrarse />
               </PageTransition>
+            }
+          />
+          <Route
+            path="/paginaUsuario"
+            element={
+              <PaginaUsuario>
+              </PaginaUsuario>
             }
           />
         </Routes>
