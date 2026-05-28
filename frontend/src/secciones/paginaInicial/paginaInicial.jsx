@@ -16,11 +16,12 @@ function PaginaInicial() {
     { handicap: 40.0 },
     { handicap: 18 },
     { handicap: 30.4 },
-    { handicap: 22.5 },
+    { handicap: 0.5 },
     { handicap: 22.5 },
   ];
 
   const handicapActualDelUsuario = 18.4;
+  const nombreUser="Alejandro";
 
   return (
     <div>
@@ -31,6 +32,7 @@ function PaginaInicial() {
         <GraficaPaginaInicial
           datos={datosUsuarioEjemplo}
           handicapActual={handicapActualDelUsuario}
+          nombreUser={nombreUser}
         />
       </div>
 

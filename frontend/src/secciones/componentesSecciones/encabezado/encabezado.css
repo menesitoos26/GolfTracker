@@ -82,7 +82,118 @@
   cursor: pointer;
   transition: transform 0.3s;
 }
+/* ... (Manten todo el CSS anterior que te pasé e introduce estas nuevas clases) ... */
 
+/* --- BLOQUE DE PERFIL DE USUARIO --- */
+.encabezado-usuario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px;
+  background-color: var(--verde-oscuro); /* rgb(45, 80, 50) */
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.usuario-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right; /* Alinea el texto hacia la foto en escritorio */
+}
+
+.usuario-nombre {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blanco-crema);
+}
+
+.usuario-email {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--verde-brillante); /* rgb(193, 233, 182) para que resalte suavemente */
+  text-transform: lowercase; /* Forzamos que el correo salga en minúsculas */
+  opacity: 0.85; /* Le damos una ligera transparencia para que el nombre resalte más */
+}
+
+/* Círculo del Avatar */
+.usuario-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--verde-brillante); /* Fondo claro para resaltar las letras oscuras */
+  color: var(--verde-oscuro);
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.usuario-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- CONTENEDOR DEL BLOQUE USUARIO + BOTÓN --- */
+.encabezado-usuario-bloque {
+  display: flex;
+  flex-direction: row; /* Fuerza a que estén uno al lado del otro */
+  align-items: center;
+  gap: 15px;
+}
+
+/* Quitamos el subrayado y color azul por defecto de los Links de React */
+.encabezado-usuario-bloque a {
+  text-decoration: none;
+}
+
+/* --- ESTILO DEL BOTÓN EDITAR PERFIL --- */
+.btn-editar-perfil {
+  background-color: rgb(193, 233, 182); /* Verde clarito */
+  color: rgb(54, 94, 58) !important; /* Forzamos el color verde oscuro */
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none !important; /* Forzamos quitar el subrayado */
+  white-space: nowrap; /* Evita que "Editar" y "perfil" se pongan en dos líneas */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.btn-editar-perfil:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* ===================================================
+   AJUSTES PARA MÓVILES (Dentro de tu @media existente)
+   =================================================== */
+@media (max-width: 768px) {
+  /* ... (Tus otras reglas de media query se quedan igual) ... */
+
+  .encabezado-usuario {
+    margin-top: auto; /* Empuja el perfil del usuario abajo del todo en el menú móvil */
+    margin-bottom: 40px;
+    width: 80%; /* Hace que la píldora de usuario sea más ancha en móvil */
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 20px;
+  }
+
+  .usuario-info {
+    text-align: left; /* En móvil queda mejor alineado a la izquierda */
+  }
+}
+a{
+  text-decoration: none !important;
+}
 /* =========================================
    DISEÑO RESPONSIVO (PANTALLAS < 768px)
    ========================================= */
