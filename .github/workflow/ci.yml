@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  validate-frontend:
+    name: Validar Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Compilar el frontend
+        working-directory: ./frontend
+        run: npm run build
+
+  validate-backend:
+    name: Validar Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        working-directory: ./backend
+        run: pip install -r requirements.txt
+
+      - name: Validar que el backend importa sin errores
+        working-directory: ./backend
+        run: python -c "from app.main import app; print('Backend OK')"
+
+  validate-docker:
+    name: Validar Docker Compose
+    runs-on: ubuntu-latest
+    needs: [validate-frontend, validate-backend]
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Crear .env de prueba
+        run: |
+          echo "GOLF_COURSE_API_KEY=fake_key_for_ci" > .env
+          echo "DATABASE_URL=mysql://golf_user:golf_pass@db:3306/golf_db" >> .env
+
+      - name: Construir las imágenes Docker
+        working-directory: ./docker
+        run: docker compose build
