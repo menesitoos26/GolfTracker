@@ -25,7 +25,8 @@ function Encabezado() {
     <header className="encabezado-container">
       {/* 1. Logotipo */}
       <div className="encabezado-logo">
-        <Link to="/paginaInicial">⛳ GolfTracker</Link>
+        <img src="/logo.png" alt="" /> 
+        <Link to="/paginaInicial"> GolfTracker</Link>
       </div>
 
       {/* 2. Botón Hamburguesa (Móviles) */}
@@ -36,9 +37,7 @@ function Encabezado() {
       {/* 3. Navegación */}
       <nav className={`encabezado-nav ${menuAbierto ? 'abierto' : ''}`}>
         <ul className="nav-links">
-          <li><Link to="/funcionalidades" onClick={() => setMenuAbierto(false)}>Funcionalidades</Link></li>
-          <li><Link to="/como-funciona" onClick={() => setMenuAbierto(false)}>Cómo Funciona</Link></li>
-          <li><Link to="/precios" onClick={() => setMenuAbierto(false)}>Precios</Link></li>
+          <li><Link to="/misRondas" onClick={() => setMenuAbierto(false)}>Mis Rondas</Link></li>
         </ul>
 
         {/* 4. RENDIMIENTO CONDICIONAL */}

@@ -1,0 +1,81 @@
+.contenedor-rondas {
+    background-color: rgba(45, 80, 50);/* Fondo gris oscuro */
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px auto;
+    max-width: 800px;
+    color: white;
+    font-family: sans-serif;
+    border: 1px solid #82df76;
+}
+
+.cabecera-rondas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.titulo-rondas {
+    margin: 0;
+    font-size: '22px';
+    font-weight: bold;
+}
+
+.boton-filtrar {
+    background-color: transparent;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.boton-filtrar:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.contenedor-tabla {
+    overflow-x: auto; /* Scroll horizontal si se encoge en móviles */
+}
+
+.tabla-rondas {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.th-rondas {
+    color: #888; /* Encabezados apagados */
+    font-weight: normal;
+    padding: 12px 8px;
+    border-bottom: 1px solid #333;
+    text-align: center;
+}
+
+.td-rondas {
+    padding: 16px 8px;
+    border-bottom: 1px solid #2a2f2b;
+    text-align: center;
+}
+
+/* Clases de utilidad para alinear y dar color */
+.text-left {
+    text-align: left;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.text-muted {
+    color: #aaa;
+}
+
+.par-destacado {
+    color: #C1E9B2; /* El verde de tu diseño */
+    font-weight: bold;
+}

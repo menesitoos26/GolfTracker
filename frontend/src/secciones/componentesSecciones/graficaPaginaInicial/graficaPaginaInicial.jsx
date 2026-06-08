@@ -1,5 +1,6 @@
 import React from 'react';
 import { LineChart, Line, ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
+import { Link, useLocation } from 'react-router-dom';
 import './graficaPaginaInicial.css';
 
 // Ahora el componente recibe "datos" y el "handicapActual" como propiedades (props)
@@ -44,7 +45,7 @@ function GraficaPaginaInicial({ datos, handicapActual, nombreUser}) {
         {/* Etiqueta de rendimiento dinámica (Verde si bajó o se mantuvo, Roja si subió) */}
         <div className="nuevaRonda">
           <button>
-              + Nueva ronda
+            <Link to="/nuevaRonda"> + Nueva ronda</Link>
           </button>
         </div>
       </div>

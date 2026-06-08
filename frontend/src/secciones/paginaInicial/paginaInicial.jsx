@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import GraficaPaginaInicial from '../componentesSecciones/graficaPaginaInicial/graficaPaginaInicial'
 import Encabezado from '../componentesSecciones/encabezado/encabezado'
 import DosBotonesYTextPagInicial from '../componentesSecciones/dosBotonesYTextPagInicial/dosBotonesYTextPagInicial'
+import ProbarAPI from '../../componentes/ProbarApi/ProbarAPI'
 import './paginaInicial.css'
 function PaginaInicial() {
 
@@ -37,6 +38,8 @@ function PaginaInicial() {
       </div>
 
       <div className='fondoInicial'></div>
+      <ProbarAPI />
+      
     </div>
   );
 }

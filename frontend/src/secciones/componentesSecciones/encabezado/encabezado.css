@@ -20,13 +20,23 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra elegante */
   position: relative; /* Importante para el menú móvil */
 }
-
+.encabezado-logo{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 200px;
+  
+}
 /* --- LOGO --- */
 .encabezado-logo a {
   font-size: 24px;
   font-weight: 700;
   text-decoration: none;
   color: var(--blanco-crema);
+}
+
+.encabezado-logo img{
+  width: 20px;
 }
 
 /* --- NAVEGACIÓN Y ENLACES (ESCRITORIO) --- */

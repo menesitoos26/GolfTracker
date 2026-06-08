@@ -3,6 +3,8 @@ import './paginaConLoginRegistrarse.css'
 import Registrarse from '../registrarse/registrarse';
 import PaginaInicial from '../paginaInicial/paginaInicial'
 import PaginaUsuario from '../paginaUsuario/paginaUsuario'
+import NuevaRonda from '../nuevaRonda/nuevaRonda'
+import MisRondas from '../misRondas/misRondas'
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -25,7 +27,7 @@ function PaginaLR() {
 
   return (
     <>
-<div className='fondoLogin'></div>
+      <div className='fondoLogin'></div>
       <AnimatePresence mode="wait">
         <Routes
           location={location}
@@ -58,6 +60,20 @@ function PaginaLR() {
             element={
               <PaginaUsuario>
               </PaginaUsuario>
+            }
+          />
+          <Route
+            path="/nuevaRonda"
+            element={
+              <NuevaRonda>
+              </NuevaRonda>
+            }
+          />
+          <Route
+            path="/misRondas"
+            element={
+              <MisRondas>
+              </MisRondas>
             }
           />
         </Routes>

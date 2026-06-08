@@ -39,6 +39,7 @@
     margin: 0;
 }
 
+
 .nuevaRonda> button{
     text-decoration: none;
     border: 2px solid rgb(65, 105, 70);
@@ -51,10 +52,17 @@
 
 }
 
+.nuevaRonda> button> a{
+    color:  rgb(21, 96, 30);
+}
+
 .nuevaRonda > button:hover{
     border: 2px solid  rgb(68, 154, 78);
-    color:  rgb(21, 96, 30);
     background-color:   white;
+}
+.nuevaRonda > button:hover >a{
+
+    color:  rgb(21, 96, 30);
 }
 
 /* --- Gráfica --- */
