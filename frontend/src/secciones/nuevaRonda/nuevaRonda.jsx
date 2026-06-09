@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Encabezado from '../componentesSecciones/encabezado/encabezado';
-import { obtenerCamposDeGolf } from '../../componentes/golfService/golfService';
+import { obtenerCamposDeGolf } from '../../Funciones/golfService/golfService';
 import './nuevaRonda.css';
 
 function NuevaRonda() {
