@@ -57,6 +57,9 @@ function Encabezado() {
         <ul className="nav-links">
           <li><Link to="/misRondas" onClick={() => setMenuAbierto(false)}>Mis Rondas</Link></li>
         </ul>
+        <ul className="nav-links">
+          <li><Link to="/nuevaRonda" onClick={() => setMenuAbierto(false)}>Nueva Rondas</Link></li>
+        </ul>
 
         {/* RENDIMIENTO CONDICIONAL REAL */}
         {/* --- Cambia esta parte del renderizado --- */}

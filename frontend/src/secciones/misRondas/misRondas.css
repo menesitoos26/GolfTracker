@@ -46,6 +46,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 15px;
+    overflow: auto;
 }
 
 .th-rondas {
@@ -79,3 +80,4 @@
     color: #C1E9B2; /* El verde de tu diseño */
     font-weight: bold;
 }
+

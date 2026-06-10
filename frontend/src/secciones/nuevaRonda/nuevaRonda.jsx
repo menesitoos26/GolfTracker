@@ -54,6 +54,7 @@ function NuevaRonda() {
   const hoyosJugados = hoyos.filter(h => h.golpes !== '').length;
   const parAcumuladoJugado = hoyos.reduce((acc, h) => h.golpes !== '' ? acc + h.par : acc, 0);
   const diferencia = totalGolpes - parAcumuladoJugado;
+// ... (Tus cálculos automáticos como totalPar, totalGolpes, etc. se quedan igual)
 
   const formatearDiferencia = () => {
     if (hoyosJugados === 0) return '0';
@@ -74,6 +75,60 @@ function NuevaRonda() {
     }
   };
 
+  // --- NUEVA FUNCIÓN: ENVIAR A LA BASE DE DATOS ---
+  const guardarRonda = async (e) => {
+    e.preventDefault(); // Evita que la página se recargue al enviar el formulario
+
+    // 1. Validaciones de seguridad
+    if (!campoSeleccionado) {
+        alert("Por favor, selecciona un campo de golf del desplegable.");
+        return;
+    }
+
+    const usuarioGuardado = localStorage.getItem('usuarioGolfTracker');
+    if (!usuarioGuardado) {
+        alert("Debes iniciar sesión para poder guardar rondas.");
+        return;
+    }
+    const usuario = JSON.parse(usuarioGuardado);
+
+    // 2. Preparamos el paquete de datos exacto que pide FastAPI
+    const payload = {
+        user_id: usuario.id,
+        course: {
+            club_name: campoSeleccionado.club_name,
+            city: campoSeleccionado.city || "Desconocida",
+            country: campoSeleccionado.country || "Desconocido"
+        },
+        total_par: totalPar,
+        total_strokes: totalGolpes,
+        hoyos: hoyos.map(h => ({
+            numero: h.numero,
+            par: h.par,
+            golpes: h.golpes === '' ? null : h.golpes // Si está vacío mandamos null
+        }))
+    };
+
+    // 3. Enviamos a la base de datos
+    try {
+        const response = await fetch('/api/guardar-ronda', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert("⛳ ¡Ronda guardada con éxito!");
+            navigate('/misRondas'); // Te redirige automáticamente para ver tu ronda en la tabla
+        } else {
+            const errorData = await response.json();
+            alert(`Hubo un problema: ${errorData.detail}`);
+        }
+    } catch (error) {
+        console.error("Error al guardar la ronda:", error);
+        alert("Fallo de conexión. Revisa que el servidor esté encendido.");
+    }
+  };
   return (
     <>
       <Encabezado />
@@ -90,7 +145,7 @@ function NuevaRonda() {
 
               {campoSeleccionado ? (
                 <p className="subtitulo-ubicacion titulo-truncado" title={`${campoSeleccionado.address || 'Sin dirección'}, ${campoSeleccionado.city}, ${campoSeleccionado.country}`}>
-                  📍 {campoSeleccionado.address || 'Sin dirección'}, {campoSeleccionado.city}, {campoSeleccionado.country}
+                  📍 {campoSeleccionado.location.address || 'Sin dirección'}
                 </p>
               ) : (
                 <p className="subtitulo-ubicacion">{fechaActual}</p>
@@ -133,7 +188,7 @@ function NuevaRonda() {
           </div>
 
           {/* TABLA DE PUNTUACIÓN */}
-          <form>
+          <form onSubmit={guardarRonda}>
             <div className="tabla-scroll">
               <table className="tabla-scorecard">
                 <thead>

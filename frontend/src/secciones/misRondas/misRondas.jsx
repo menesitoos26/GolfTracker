@@ -1,55 +1,102 @@
-import React, { useState } from 'react';
-import './misRondas.css'; // Asegúrate de que la ruta sea correcta según tus carpetas
-import  Encabezado from '../componentesSecciones/encabezado/encabezado';
-function MisRondas() {
-    const [rondas, setRondas] = useState([
-        { id: 1, campo: 'Club de Campo', fecha: '15 may 2026', golpes: 88, plusMinus: '+16', putts: 34 },
-        { id: 2, campo: 'La Moraleja', fecha: '8 may 2026', golpes: 82, plusMinus: '+10', putts: 30 },
-        { id: 3, campo: 'Real Club Sevilla', fecha: '1 may 2026', golpes: 91, plusMinus: '+19', putts: 36 }
-    ]);
+import React, { useState, useEffect } from 'react';
+import './misRondas.css'; 
+import Encabezado from '../componentesSecciones/encabezado/encabezado';
 
-    const gestionarFiltro = () => {
-        alert("¡Filtros en desarrollo!");
+function MisRondas() {
+    const [rondas, setRondas] = useState([]);
+    const [cargando, setCargando] = useState(true);
+
+    // Separé la lógica de cargar rondas en su propia función para poder llamarla cuando queramos
+    const cargarRondas = async () => {
+        const usuarioGuardado = localStorage.getItem('usuarioGolfTracker');
+        if (!usuarioGuardado) {
+            setCargando(false);
+            return;
+        }
+
+        const usuario = JSON.parse(usuarioGuardado);
+        try {
+            const response = await fetch(`/api/rondas/${usuario.id}`);
+            if (response.ok) {
+                const data = await response.json();
+                setRondas(data);
+            }
+        } catch (error) {
+            console.error("Error cargando rondas:", error);
+        } finally {
+            setCargando(false);
+        }
+    };
+
+    // El useEffect llama a la función al entrar a la página
+    useEffect(() => {
+        cargarRondas();
+    }, []);
+
+    // --- NUEVA FUNCIÓN: Generar datos de prueba ---
+    const generarRondaDePrueba = async () => {
+        const usuarioGuardado = localStorage.getItem('usuarioGolfTracker');
+        if (!usuarioGuardado) return alert("Debes iniciar sesión primero");
+        
+        const usuario = JSON.parse(usuarioGuardado);
+        
+        try {
+            // Llamamos al backend para que inyecte los datos
+            const response = await fetch(`/api/crear-ronda-prueba/${usuario.id}`, {
+                method: 'POST'
+            });
+            
+            if (response.ok) {
+                // Si funcionó, recargamos la tabla para ver el nuevo dato
+                cargarRondas(); 
+            } else {
+                alert("Hubo un error al generar los datos.");
+            }
+        } catch (error) {
+            console.error("Fallo de red:", error);
+        }
     };
 
     return (
-      <>
-      <Encabezado />
+        <>
+            <Encabezado />
       
-        <div className="contenedor-rondas">
-            <div className="cabecera-rondas">
-                <h2 className="titulo-rondas">Mis rondas</h2>
-                <button onClick={gestionarFiltro} className="boton-filtrar">
-                    ⏳ Filtrar
-                </button>
-            </div>
+            <div className="contenedor-rondas">
+                <div className="cabecera-rondas" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h2 className="titulo-rondas">Mis rondas</h2>
+                </div>
 
-            <div className="contenedor-tabla">
-                <table className="tabla-rondas">
-                    <thead>
-                        <tr>
-                            <th className="th-rondas text-left">Campo</th>
-                            <th className="th-rondas">Fecha</th>
-                            <th className="th-rondas">Golpes</th>
-                            <th className="th-rondas">+/- Par</th>
-                            <th className="th-rondas">Putts</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rondas.map((ronda) => (
-                            <tr key={ronda.id}>
-                                <td className="td-rondas text-left text-bold">{ronda.campo}</td>
-                                <td className="td-rondas text-muted">{ronda.fecha}</td>
-                                <td className="td-rondas text-bold">{ronda.golpes}</td>
-                                <td className="par-destacado td-rondas">{ronda.plusMinus}</td>
-                                <td className="td-rondas text-muted">{ronda.putts}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div className="contenedor-tabla">
+                    {cargando ? (
+                        <p style={{ textAlign: 'center', color: 'white', padding: '20px' }}>Cargando tus rondas...</p>
+                    ) : rondas.length === 0 ? (
+                        <p style={{ textAlign: 'center', color: 'white', padding: '20px' }}>Aún no has registrado ninguna ronda.</p>
+                    ) : (
+                        <table className="tabla-rondas">
+                            <thead>
+                                <tr>
+                                    <th className="th-rondas text-left">Campo</th>
+                                    <th className="th-rondas">Fecha</th>
+                                    <th className="th-rondas">Golpes</th>
+                                    <th className="th-rondas">+/- Par</th>
+                                    <th className="th-rondas">Putts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rondas.map((ronda) => (
+                                    <tr key={ronda.id}>
+                                        <td className="td-rondas text-left text-bold">{ronda.campo}</td>
+                                        <td className="td-rondas text-muted">{ronda.fecha}</td>
+                                        <td className="td-rondas text-bold">{ronda.golpes}</td>
+                                        <td className="par-destacado td-rondas">{ronda.plusMinus}</td>
+                                        <td className="td-rondas text-muted">{ronda.putts}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
             </div>
-        </div>
-
         </>
     );
 }
