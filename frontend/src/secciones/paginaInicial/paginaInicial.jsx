@@ -38,8 +38,7 @@ function PaginaInicial() {
       </div>
 
       <div className='fondoInicial'></div>
-      <ProbarAPI />
-      
+
     </div>
   );
 }
