@@ -6,7 +6,6 @@ function MisRondas() {
     const [rondas, setRondas] = useState([]);
     const [cargando, setCargando] = useState(true);
 
-    // Separé la lógica de cargar rondas en su propia función para poder llamarla cuando queramos
     const cargarRondas = async () => {
         const usuarioGuardado = localStorage.getItem('usuarioGolfTracker');
         if (!usuarioGuardado) {
@@ -28,34 +27,9 @@ function MisRondas() {
         }
     };
 
-    // El useEffect llama a la función al entrar a la página
     useEffect(() => {
         cargarRondas();
     }, []);
-
-    // --- NUEVA FUNCIÓN: Generar datos de prueba ---
-    const generarRondaDePrueba = async () => {
-        const usuarioGuardado = localStorage.getItem('usuarioGolfTracker');
-        if (!usuarioGuardado) return alert("Debes iniciar sesión primero");
-        
-        const usuario = JSON.parse(usuarioGuardado);
-        
-        try {
-            // Llamamos al backend para que inyecte los datos
-            const response = await fetch(`/api/crear-ronda-prueba/${usuario.id}`, {
-                method: 'POST'
-            });
-            
-            if (response.ok) {
-                // Si funcionó, recargamos la tabla para ver el nuevo dato
-                cargarRondas(); 
-            } else {
-                alert("Hubo un error al generar los datos.");
-            }
-        } catch (error) {
-            console.error("Fallo de red:", error);
-        }
-    };
 
     return (
         <>
@@ -66,32 +40,57 @@ function MisRondas() {
                     <h2 className="titulo-rondas">Mis rondas</h2>
                 </div>
 
-                <div className="contenedor-tabla">
+                <div 
+                    className="contenedor-tabla" 
+                    style={{ 
+                        maxHeight: '60vh', 
+                        overflowY: 'auto', 
+                        borderRadius: '8px'
+                    }}
+                >
                     {cargando ? (
                         <p style={{ textAlign: 'center', color: 'white', padding: '20px' }}>Cargando tus rondas...</p>
                     ) : rondas.length === 0 ? (
                         <p style={{ textAlign: 'center', color: 'white', padding: '20px' }}>Aún no has registrado ninguna ronda.</p>
                     ) : (
-                        <table className="tabla-rondas">
-                            <thead>
+                        <table className="tabla-rondas" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead style={{ position: 'sticky', top: 0, backgroundColor: '#2C4A2B', zIndex: 1 }}>
                                 <tr>
                                     <th className="th-rondas text-left">Campo</th>
                                     <th className="th-rondas">Fecha</th>
-                                    <th className="th-rondas">Golpes</th>
+                                    <th className="th-rondas">Par Campo</th> {/* CAMBIADO: Nueva cabecera */}
+                                    <th className="th-rondas">Tus Golpes</th> {/* CAMBIADO: Nombre más claro */}
                                     <th className="th-rondas">+/- Par</th>
-                                    <th className="th-rondas">Putts</th>
+                                    {/* CAMBIADO: Se elimina la cabecera de Putts */}
                                 </tr>
                             </thead>
                             <tbody>
-                                {rondas.map((ronda) => (
-                                    <tr key={ronda.id}>
-                                        <td className="td-rondas text-left text-bold">{ronda.campo}</td>
-                                        <td className="td-rondas text-muted">{ronda.fecha}</td>
-                                        <td className="td-rondas text-bold">{ronda.golpes}</td>
-                                        <td className="par-destacado td-rondas">{ronda.plusMinus}</td>
-                                        <td className="td-rondas text-muted">{ronda.putts}</td>
-                                    </tr>
-                                ))}
+                                {rondas.map((ronda) => {
+                                    // Extraemos el par del campo de forma segura (por si acaso viene vacío)
+                                    const parCampo = ronda.course?.total_par || 0;
+                                    // Calculamos la diferencia (+/- par)
+                                    const diferencia = ronda.total_strokes - parCampo;
+                                    
+                                    // Formateamos el texto del más/menos par
+                                    const plusMinusTexto = diferencia > 0 ? `+${diferencia}` : diferencia === 0 ? "E" : diferencia;
+
+                                    return (
+                                        <tr key={ronda.id}>
+                                            <td className="td-rondas text-left text-bold">
+                                                {ronda.course?.club_name || "Campo desconocido"}
+                                            </td>
+                                            <td className="td-rondas text-muted">{ronda.date}</td>
+                                            
+                                            {/* CAMBIADO: Añadimos la celda con el Par total necesario del campo */}
+                                            <td className="td-rondas text-muted">{parCampo}</td>
+                                            
+                                            <td className="td-rondas text-bold">{ronda.total_strokes}</td>
+                                            <td className="par-destacado td-rondas">{plusMinusTexto}</td>
+                                            
+                                            {/* CAMBIADO: Se elimina la celda de Putts */}
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     )}

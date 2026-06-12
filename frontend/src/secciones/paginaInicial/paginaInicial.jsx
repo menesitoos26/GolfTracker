@@ -1,45 +1,83 @@
-import { useState, createContext, useContext } from 'react'
-import './paginaInicial.css'
-import { Routes, Route } from 'react-router-dom';
-import GraficaPaginaInicial from '../componentesSecciones/graficaPaginaInicial/graficaPaginaInicial'
-import Encabezado from '../componentesSecciones/encabezado/encabezado'
-import DosBotonesYTextPagInicial from '../componentesSecciones/dosBotonesYTextPagInicial/dosBotonesYTextPagInicial'
-import ProbarAPI from '../../Funciones/ProbarApi/ProbarAPI'
-import './paginaInicial.css'
+import { useState, useEffect } from 'react';
+import './paginaInicial.css';
+import GraficaPaginaInicial from '../componentesSecciones/graficaPaginaInicial/graficaPaginaInicial';
+import Encabezado from '../componentesSecciones/encabezado/encabezado';
+import DosBotonesYTextPagInicial from '../componentesSecciones/dosBotonesYTextPagInicial/dosBotonesYTextPagInicial';
+
 function PaginaInicial() {
+  // 1. Estados para almacenar los datos reales del usuario y del campo
+  const [datosGrafica, setDatosGrafica] = useState([]);
+  const [nombreCampo, setNombreCampo] = useState('');
+  const [datosUsuario, setDatosUsuario] = useState({ name: "Jugador", handicap: "N/A" });
 
+  useEffect(() => {
+    // 2. Recuperar el usuario logueado desde el localStorage
+    const usuarioGuardado = localStorage.getItem('usuarioGolfTracker');
+    if (usuarioGuardado) {
+      const usuario = JSON.parse(usuarioGuardado);
+      setDatosUsuario({
+        name: usuario.name,
+        // Si el handicap viene vacío o nulo de la base de datos, mostramos "N/A"
+        handicap: usuario.handicap !== null ? usuario.handicap : "N/A" 
+      });
+    }
 
-  // Imagina que estos datos vienen de tu Base de Datos o API
-  const datosUsuarioEjemplo = [
-    { handicap: 24.0 },
-    { handicap: 24.5 },
-    { handicap: 1 },
-    { handicap: 40.0 },
-    { handicap: 18 },
-    { handicap: 30.4 },
-    { handicap: 0.5 },
-    { handicap: 22.5 },
-  ];
+    // 3. Consultar a tu API (FastAPI) el último campo creado
+    const cargarUltimoCampo = async () => {
+      try {
+        const response = await fetch('/api/course/ultimo');
+        
+        if (response.ok) {
+          const data = await response.json();
+          // data.holes es el array con los { hole_number: X, par: Y }
+          setDatosGrafica(data.holes); 
+          setNombreCampo(data.name);
+        } else {
+          // Si el servidor responde con error (ej. base de datos vacía)
+          inyectarCerosPorDefecto();
+        }
+      } catch (error) {
+        console.error("Error al conectar con la API de campos:", error);
+        inyectarCerosPorDefecto();
+      }
+    };
 
-  const handicapActualDelUsuario = 18.4;
-  const nombreUser="Alejandro";
+    // Función de seguridad: Genera 18 hoyos a cero para que la gráfica no explote
+    const inyectarCerosPorDefecto = () => {
+      const ceros = Array.from({ length: 18 }, (_, i) => ({
+        hole_number: i + 1,
+        par: 0
+      }));
+      setDatosGrafica(ceros);
+      setNombreCampo('Sin campos registrados');
+    };
+
+    cargarUltimoCampo();
+    console.log("GRAFICA "+datosGrafica)
+  }, []); // El array vacío asegura que esto solo se ejecute una vez al cargar la página
 
   return (
     <div>
-      <Encabezado></Encabezado>
-      <DosBotonesYTextPagInicial></DosBotonesYTextPagInicial>
-      {/* Usamos el componente pasándole las propiedades dinámicas */}
+      <Encabezado />
+      <DosBotonesYTextPagInicial />
+      
       <div className='parteGrafica'>
+        {/* Título opcional para saber qué campo estamos viendo en la gráfica */}
+        <h3 style={{ color: '#C1E9B6', textAlign: 'center', marginBottom: '15px', fontSize: '18px' }}>
+          Visualizando campo: {nombreCampo}
+        </h3>
+
+        {/* Le pasamos a tu gráfica los datos reales procesados */}
         <GraficaPaginaInicial
-          datos={datosUsuarioEjemplo}
-          handicapActual={handicapActualDelUsuario}
-          nombreUser={nombreUser}
+          datos={datosGrafica}
+          handicapActual={datosUsuario.handicap}
+          nombreUser={datosUsuario.name}
         />
       </div>
 
       <div className='fondoInicial'></div>
-
     </div>
   );
 }
-export default PaginaInicial
+
+export default PaginaInicial;
