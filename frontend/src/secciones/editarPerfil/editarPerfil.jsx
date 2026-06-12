@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Encabezado from '../componentesSecciones/encabezado/encabezado';
-import './paginaEditarPerfil.css';
+import './editarPerfil.css';
 
 function PaginaEditarPerfil() {
     const navigate = useNavigate(); // Hook para redireccionar al usuario al guardar

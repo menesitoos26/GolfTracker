@@ -1,12 +1,14 @@
 .contenedor-rondas {
-    background-color: rgba(45, 80, 50);/* Fondo gris oscuro */
-    border-radius: 12px;
+    background-color: var(--verde-oscuro, rgb(45, 80, 50));
+    border-radius: var(--radio-lg, 16px);
     padding: 24px;
-    margin: 20px auto;
+    margin: 30px auto;
     max-width: 800px;
     color: white;
-    font-family: sans-serif;
-    border: 1px solid #82df76;
+    font-family: var(--fuente-texto, sans-serif);
+    border: 1px solid rgba(193, 233, 182, 0.35);
+    box-shadow: var(--sombra-tarjeta, 0 10px 30px rgba(0,0,0,0.25));
+    box-sizing: border-box;
 }
 
 .cabecera-rondas {
@@ -18,8 +20,10 @@
 
 .titulo-rondas {
     margin: 0;
-    font-size: '22px';
-    font-weight: bold;
+    font-family: var(--fuente-titulos, sans-serif);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--verde-brillante, rgb(193, 233, 182));
 }
 
 .boton-filtrar {
@@ -50,17 +54,26 @@
 }
 
 .th-rondas {
-    color: #888; /* Encabezados apagados */
-    font-weight: normal;
+    color: var(--texto-tenue, #aab8ac);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     padding: 12px 8px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid rgba(193, 233, 182, 0.2);
     text-align: center;
+    background-color: var(--verde-profundo, rgb(35, 65, 40));
 }
 
 .td-rondas {
-    padding: 16px 8px;
-    border-bottom: 1px solid #2a2f2b;
+    padding: 14px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
     text-align: center;
+    font-size: 14px;
+}
+
+.tabla-rondas tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.04);
 }
 
 /* Clases de utilidad para alinear y dar color */

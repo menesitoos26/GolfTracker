@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+/* =========================================
+   SISTEMA DE DISEÑO GLOBAL - GOLFTRACKER
+   ========================================= */
+:root {
+  /* Paleta principal */
+  --verde-header: rgb(65, 105, 70);
+  --verde-oscuro: rgb(45, 80, 50);
+  --verde-profundo: rgb(35, 65, 40);
+  --verde-medio: rgb(54, 94, 58);
+  --verde-suave: rgb(96, 166, 103);
+  --verde-brillante: rgb(193, 233, 182);
+  --verde-acento: #A3E635;
+  --blanco-crema: #F4F7F2;
+
+  /* Texto */
+  --texto-claro: var(--blanco-crema);
+  --texto-tenue: #aab8ac;
+
+  /* Estados */
+  --color-error: #ff6b6b;
+  --color-exito: #6bffb8;
+
+  /* Forma */
+  --radio-sm: 8px;
+  --radio-md: 14px;
+  --radio-lg: 20px;
+  --radio-pill: 999px;
+
+  /* Sombras */
+  --sombra-suave: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --sombra-tarjeta: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+  /* Tipografía */
+  --fuente-titulos: 'Poppins', system-ui, -apple-system, sans-serif;
+  --fuente-texto: 'Inter', system-ui, -apple-system, sans-serif;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--fuente-texto);
+  color: var(--texto-claro);
+  background-color: var(--verde-oscuro);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--fuente-titulos);
+  margin: 0;
+}
+
+button {
+  font-family: var(--fuente-texto);
+  cursor: pointer;
+}
+
+input, select, textarea {
+  font-family: var(--fuente-texto);
+}
+
+a {
+  font-family: var(--fuente-texto);
+}
+
+/* Scrollbar discreta acorde a la paleta */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--verde-suave);
+  border-radius: var(--radio-pill);
+}

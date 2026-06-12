@@ -24,16 +24,16 @@
 
 /* --- ESTILO DE CADA RECUADRO DE DATOS --- */
 .tarjeta-dato {
-    background-color: rgb(54, 94, 58); /* Tu color verde oscuro principal */
-    border: 2px solid rgb(193, 233, 182); /* Borde verde clarito brillante */
-    border-radius: 16px;
-    padding: 20px;
+    background-color: var(--verde-medio, rgb(54, 94, 58));
+    border: 2px solid var(--verde-brillante, rgb(193, 233, 182));
+    border-radius: var(--radio-lg, 16px);
+    padding: 24px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     justify-content: center;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--sombra-tarjeta, 0 8px 24px rgba(0, 0, 0, 0.3));
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 

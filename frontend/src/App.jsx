@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import PaginaLR from './secciones/paginaConLoginRegistrarse/paginaConLoginRegistrarse'
+import './index.css'
 import './App.css'
 
 function App() {
