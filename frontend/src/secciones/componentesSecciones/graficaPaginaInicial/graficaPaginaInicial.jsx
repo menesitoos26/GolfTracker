@@ -1,48 +1,36 @@
 import React from 'react';
-import { LineChart, Line, ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
-import { Link, useLocation } from 'react-router-dom';
+import { BarChart, Bar, ResponsiveContainer, CartesianGrid, Tooltip, XAxis, YAxis, Legend } from 'recharts';
+import { Link } from 'react-router-dom';
 import './graficaPaginaInicial.css';
 
-// Ahora el componente recibe "datos" y el "handicapActual" como propiedades (props)
-function GraficaPaginaInicial({ datos, handicapActual, nombreUser}) {
-  
-  // CONTROL DE SEGURIDAD: Si no hay datos todavía, mostramos un mensaje de carga
+function GraficaPaginaInicial({ datos, handicapActual, nombreUser }) {
+
   if (!datos || datos.length === 0) {
-    return <div className="tarjeta-progreso">Cargando datos...</div>;
+    return <div className="tarjeta-progreso">Cargando rendimiento de tu última ronda...</div>;
   }
 
-  // --- AUTOMATIZACIÓN DE MÉTRICAS ---
-  
-  // 1. Total de rondas jugadas (el tamaño del array)
-  const totalRondas = datos.length;
-
-  // 2. Calcular el Mejor resultado (el valor mínimo en la propiedad 'score' o 'handicap' según uses)
-  // Nota: En el golf, "mejor" suele ser la ronda con menos golpes (score) o el hándicap más bajo.
-  const mejorHandicap = Math.min(...datos.map(d => d.handicap));
-
-  // 3. Calcular la Media de hándicap
-  const sumaHandicaps = datos.reduce((acc, d) => acc + d.handicap, 0);
-  const mediaHandicap = (sumaHandicaps / totalRondas).toFixed(1); // Redondeado a 1 decimal
-
-  // 4. Calcular la diferencia del último mes (comparando el primero y el último dato del array)
-  const primerHandicap = datos[0].handicap;
-  const ultimoHandicap = datos[datos.length - 1].handicap;
-  const diferencia = (ultimoHandicap - primerHandicap).toFixed(1);
-  
-  // Determinamos si ha mejorado (bajado) o subido para el estilo visual
-  const esMejora = diferencia <= 0;
+  // Normalizamos los datos de forma ultra segura
+// Asegúrate de que no haya ninguna 'i' suelta por ahí
+const datosProcesados = datos.map((d) => ({
+    hoyo: d.hole_number || d.numero || 0,
+    parNecesario: d.par || 0,
+    tusGolpes: d.golpes || d.strokes || 0
+}));
+  // --- METRICAS BASADAS SÓLO EN LO JUGADO ---
+  const totalHoyos = datosProcesados.length;
+  const totalPar = datosProcesados.reduce((acc, d) => acc + d.parNecesario, 0);
+  const valorMaximo = Math.max(...datosProcesados.map(d => Math.max(d.parNecesario, d.tusGolpes)));
+  const mediaPar = totalHoyos > 0 ? (totalPar / totalHoyos).toFixed(1) : 0;
 
   return (
     <div className="tarjeta-progreso">
-      
-      {/* Cabecera de la gráfica dinámica */}
+
       <div className="cabecera-progreso">
         <div className="titulos">
-          <span className="subtitulo">Tu progreso</span>
+          <span className="subtitulo">Rendimiento por Hoyo</span>
           <h2 className="titulo-principal">Bienvenido {nombreUser}</h2>
         </div>
-        
-        {/* Etiqueta de rendimiento dinámica (Verde si bajó o se mantuvo, Roja si subió) */}
+
         <div className="nuevaRonda">
           <button>
             <Link to="/nuevaRonda"> + Nueva ronda</Link>
@@ -50,50 +38,45 @@ function GraficaPaginaInicial({ datos, handicapActual, nombreUser}) {
         </div>
       </div>
 
-            {/* Estadísticas calculadas automáticamente */}
       <div className="estadisticas-inferiores">
         <div className="stat-box">
           <span className="stat-label">Handicap Actual</span>
           <span className="stat-value">{handicapActual}</span>
         </div>
         <div className="stat-box">
-          <span className="stat-label">Rondas</span>
-          <span className="stat-value">{totalRondas}</span>
+          <span className="stat-label">Hoyos</span>
+          <span className="stat-value">{totalHoyos}</span>
         </div>
         <div className="stat-box">
-          <span className="stat-label">Mejor Hcp</span>
-          <span className="stat-value">{mejorHandicap}</span>
+          <span className="stat-label">Total Par</span>
+          <span className="stat-value">{totalPar}</span>
         </div>
         <div className="stat-box">
-          <span className="stat-label">Media Hcp</span>
-          <span className="stat-value">{mediaHandicap}</span>
+          <span className="stat-label">Media Par</span>
+          <span className="stat-value">{mediaPar}</span>
         </div>
       </div>
 
-      {/* Contenedor de la Gráfica */}
       <div className="contenedor-grafica">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={datos}>
-            <CartesianGrid strokeDasharray="3 3" vertical={true} horizontal={false} stroke="#333" />
-            <Tooltip 
+          <BarChart data={datosProcesados} margin={{ top: 10, right: 20, left: -20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} horizontal={true} stroke="#333" />
+            <XAxis dataKey="hoyo" stroke="#888" tickLine={false} dy={10} />
+            <YAxis stroke="#888" tickLine={false} domain={[0, valorMaximo + 2]} dx={-5} />
+
+            <Tooltip
               contentStyle={{ backgroundColor: '#2a2a2a', border: 'none', borderRadius: '8px', color: '#fff' }}
-              itemStyle={{ color: '#4ade80' }}
-              labelFormatter={(value, name) => `Ronda: ${value + 1}`} // Para que muestre "Ronda X" al pasar el mouse
+              labelFormatter={(value) => `Hoyo: ${value}`}
             />
-            <Line 
-              type="monotone" 
-              dataKey="handicap" // Clave del diccionario que leerá para graficar
-              stroke="#2ecc71" 
-              strokeWidth={3} 
-              dot={{ r: 4, fill: '#1e1e1e', stroke: '#2ecc71', strokeWidth: 2 }} 
-              activeDot={{ r: 6, fill: '#2ecc71' }}
-            />
-          </LineChart>
+            <Legend verticalAlign="top" height={36} wrapperStyle={{ color: '#fff' }} />
+
+            {/* Barra Gris/Blanca para el Par */}
+            <Bar name="Par necesario" dataKey="parNecesario" fill="#E2E8F0" radius={[4, 4, 0, 0]} />
+            {/* Barra Verde Lima para tus Golpes Reales */}
+            <Bar name="Tus golpes" dataKey="tusGolpes" fill="#A3E635" radius={[4, 4, 0, 0]} />
+          </BarChart>
         </ResponsiveContainer>
       </div>
-
-
-
     </div>
   );
 }

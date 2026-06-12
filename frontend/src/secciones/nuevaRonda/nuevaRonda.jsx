@@ -76,10 +76,9 @@ function NuevaRonda() {
   };
 
   // --- NUEVA FUNCIÓN: ENVIAR A LA BASE DE DATOS ---
-  const guardarRonda = async (e) => {
-    e.preventDefault(); // Evita que la página se recargue al enviar el formulario
+const guardarRonda = async (e) => {
+    e.preventDefault();
 
-    // 1. Validaciones de seguridad
     if (!campoSeleccionado) {
         alert("Por favor, selecciona un campo de golf del desplegable.");
         return;
@@ -92,7 +91,6 @@ function NuevaRonda() {
     }
     const usuario = JSON.parse(usuarioGuardado);
 
-    // 2. Preparamos el paquete de datos exacto que pide FastAPI
     const payload = {
         user_id: usuario.id,
         course: {
@@ -105,11 +103,10 @@ function NuevaRonda() {
         hoyos: hoyos.map(h => ({
             numero: h.numero,
             par: h.par,
-            golpes: h.golpes === '' ? null : h.golpes // Si está vacío mandamos null
+            golpes: h.golpes === '' ? null : h.golpes
         }))
     };
 
-    // 3. Enviamos a la base de datos
     try {
         const response = await fetch('/api/guardar-ronda', {
             method: 'POST',
@@ -117,12 +114,20 @@ function NuevaRonda() {
             body: JSON.stringify(payload)
         });
 
+        // IMPORTANTE: Extraemos los datos aquí
+        const data = await response.json();
+
         if (response.ok) {
+            // ACTUALIZAMOS LA MEMORIA CON EL NUEVO HÁNDICAP EN VIVO
+            if (data.nuevo_handicap !== undefined) {
+                usuario.handicap = data.nuevo_handicap;
+                localStorage.setItem('usuarioGolfTracker', JSON.stringify(usuario));
+            }
+
             alert("⛳ ¡Ronda guardada con éxito!");
-            navigate('/misRondas'); // Te redirige automáticamente para ver tu ronda en la tabla
+            navigate('/misRondas');
         } else {
-            const errorData = await response.json();
-            alert(`Hubo un problema: ${errorData.detail}`);
+            alert(`Hubo un problema: ${data.detail}`);
         }
     } catch (error) {
         console.error("Error al guardar la ronda:", error);

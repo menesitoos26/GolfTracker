@@ -1,4 +1,5 @@
 import os
+import random
 import bcrypt
 from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
@@ -6,7 +7,6 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from typing import List, Optional
 from datetime import datetime
-
 
 app = FastAPI(title="Golf Tracker API")
 
@@ -24,6 +24,7 @@ def get_db():
         db.close()
 
 # Modelos para validar los datos que llegan desde React
+
 class RegistroUsuario(BaseModel):
     name: str
     email: str
@@ -89,8 +90,8 @@ def ruta_registro(datos: RegistroUsuario, db: Session = Depends(get_db)):
 @app.post("/login")
 def ruta_login(datos: LoginUsuario, db: Session = Depends(get_db)):
     try:
-        # 1. Buscamos al usuario por su correo electrónico
-        query = text("SELECT id, name, email, password_hash FROM users WHERE email = :email")
+        # 1. MODIFICADO: Ahora también seleccionamos la columna 'handicap' de la tabla users
+        query = text("SELECT id, name, email, password_hash, handicap FROM users WHERE email = :email")
         result = db.execute(query, {"email": datos.email})
         usuario = result.fetchone()
 
@@ -111,17 +112,17 @@ def ruta_login(datos: LoginUsuario, db: Session = Depends(get_db)):
                 "usuario": {
                     "id": usuario_dict["id"],
                     "name": usuario_dict["name"],
-                    "email": usuario_dict["email"]
+                    "email": usuario_dict["email"],
+                    # MODIFICADO: Enviamos el hándicap a React (si es None en MySQL, mandamos null)
+                    "handicap": float(usuario_dict["handicap"]) if usuario_dict["handicap"] is not None else None
                 }
             }
         else:
             raise HTTPException(status_code=401, detail="Correo o contraseña incorrectos")
 
     except HTTPException as http_ex:
-        # Errores de credenciales controlados (401), los dejamos pasar directos a React
         raise http_ex
     except Exception as e:
-        # Si el código se rompe por otra causa, esto lo pintará en la consola de Docker para poder solucionarlo
         print(f"--- ERROR CRÍTICO DETECTADO EN EL LOGIN ---: {e}")
         raise HTTPException(status_code=500, detail=f"Error interno en el servidor: {e}")
     
@@ -129,27 +130,28 @@ def ruta_login(datos: LoginUsuario, db: Session = Depends(get_db)):
 @app.get("/course/ultimo")
 def obtener_ultimo_course(db: Session = Depends(get_db)):
     try:
-        # 1. Buscamos el último campo registrado usando el ID auto-incremental más alto
-        query_course = text("SELECT id, name, total_par FROM courses ORDER BY id DESC LIMIT 1")
+        query_course = text("""
+            SELECT c.id, c.name, c.total_par 
+            FROM courses c
+            JOIN rounds r ON c.id = r.course_id
+            ORDER BY r.id DESC LIMIT 1
+        """)
         result_course = db.execute(query_course).fetchone()
         
-        # SI LA BASE DE DATOS ESTÁ VACÍA (No hay ningún campo creado)
+        if not result_course: 
+            result_course = db.execute(text("SELECT id, name, total_par FROM courses ORDER BY id DESC LIMIT 1")).fetchone()
+            
         if not result_course:
-            # Generamos 18 hoyos virtuales configurados todos a par 0
             hoyos_ceros = [{"hole_number": i, "par": 0} for i in range(1, 19)]
             return {"name": "Sin campos registrados", "total_par": 0, "holes": hoyos_ceros}
-        
-        # Si sí encontramos un campo, extraemos sus datos limpios
+            
         course_dict = result_course._mapping
         course_id = course_dict["id"]
         
-        # 2. Traemos los hoyos pertenecientes a este campo específico ordenados del 1 al 18
         query_holes = text("SELECT hole_number, par FROM holes WHERE course_id = :course_id ORDER BY hole_number ASC")
         result_holes = db.execute(query_holes, {"course_id": course_id}).fetchall()
         
         hoyos = [dict(h._mapping) for h in result_holes]
-        
-        # Control de seguridad: Si el campo existe pero no tiene hoyos guardados
         if not hoyos:
             hoyos = [{"hole_number": i, "par": 0} for i in range(1, 19)]
             
@@ -163,103 +165,35 @@ def obtener_ultimo_course(db: Session = Depends(get_db)):
         print(f"Error al obtener el último campo: {e}")
         raise HTTPException(status_code=500, detail="Error interno del servidor")
     
-from datetime import datetime
-
 @app.get("/rondas/{user_id}")
 def obtener_rondas_usuario(user_id: int, db: Session = Depends(get_db)):
     try:
-        # Consulta SQL combinando las tablas rounds, courses y hole_scores
+        # Buscamos las rondas guardadas del usuario en la base de datos
         query = text("""
-            SELECT 
-                r.id,
-                c.name AS campo,
-                r.date AS fecha,
-                r.total_strokes AS golpes,
-                (r.total_strokes - c.total_par) AS diferencia_par,
-                COALESCE(SUM(hs.putts), 0) AS putts
+            SELECT r.id, r.date, r.total_strokes, c.name AS club_name, c.total_par
             FROM rounds r
             JOIN courses c ON r.course_id = c.id
-            LEFT JOIN hole_scores hs ON r.id = hs.round_id
             WHERE r.user_id = :user_id
-            GROUP BY r.id, c.name, r.date, r.total_strokes, c.total_par
-            ORDER BY r.date DESC
+            ORDER BY r.date DESC, r.id DESC
         """)
+        result = db.execute(query, {"user_id": user_id}).fetchall()
         
-        resultados = db.execute(query, {"user_id": user_id}).fetchall()
-        
-        rondas_formateadas = []
-        for row in resultados:
-            row_dict = row._mapping
-            
-            # Formateamos el +/- Par
-            diferencia = row_dict["diferencia_par"]
-            if diferencia is None:
-                plus_minus = "-"
-            elif diferencia > 0:
-                plus_minus = f"+{diferencia}"
-            elif diferencia == 0:
-                plus_minus = "E" # Even / Par
-            else:
-                plus_minus = str(diferencia)
-
-            # Damos formato a la fecha (Ej: "15 may 2026")
-            fecha_obj = row_dict["fecha"]
-            fecha_str = fecha_obj.strftime("%d %b %Y") if isinstance(fecha_obj, datetime) else str(fecha_obj)
-
-            rondas_formateadas.append({
-                "id": row_dict["id"],
-                "campo": row_dict["campo"],
-                "fecha": fecha_str.lower(),
-                "golpes": row_dict["golpes"] or "-",
-                "plusMinus": plus_minus,
-                "putts": int(row_dict["putts"])
+        rondas = []
+        for fila in result:
+            r_dict = fila._mapping
+            rondas.append({
+                "id": r_dict["id"],
+                "date": str(r_dict["date"]),
+                "total_strokes": r_dict["total_strokes"],
+                "course": {
+                    "club_name": r_dict["club_name"],
+                    "total_par": r_dict["total_par"]
+                }
             })
-            
-        return rondas_formateadas
-
+        return rondas
     except Exception as e:
-        print(f"Error al obtener las rondas: {e}")
-        raise HTTPException(status_code=500, detail="Error interno al cargar las rondas")
-import random
-from datetime import datetime
-
-@app.post("/crear-ronda-prueba/{user_id}")
-def crear_ronda_prueba(user_id: int, db: Session = Depends(get_db)):
-
-    try:
-        # 1. Creamos un campo de prueba (INSERT IGNORE evita que se duplique si ya existe)
-        db.execute(text("""
-            INSERT IGNORE INTO courses (external_id, name, total_par) 
-            VALUES ('TEST-001', 'Campo Aleatorio', 72)
-        """))
-        
-        # Obtenemos el ID de ese campo
-        course = db.execute(text("SELECT id FROM courses WHERE name = 'Campo Aleatorio' LIMIT 1")).fetchone()
-        course_id = course._mapping["id"]
-
-        # 2. Generamos unos golpes aleatorios para simular una partida
-        golpes_aleatorios = random.randint(70, 105)
-        
-        # 3. Insertamos la ronda en la tabla rounds
-        query = text("""
-            INSERT INTO rounds (user_id, course_id, date, total_strokes, notes)
-            VALUES (:user_id, :course_id, :date, :total_strokes, 'Generado automáticamente')
-        """)
-        
-        db.execute(query, {
-            "user_id": user_id,
-            "course_id": course_id,
-            "date": datetime.now().date(),
-            "total_strokes": golpes_aleatorios
-        })
-        
-        db.commit() # ¡Guardamos los cambios en MySQL!
-        return {"mensaje": "¡Datos de prueba inyectados con éxito!"}
-        
-    except Exception as e:
-        db.rollback() # Si algo falla, deshacemos para no corromper la BD
-        print(f"Error inyectando datos: {e}")
-        raise HTTPException(status_code=500, detail="Error al crear datos de prueba")
+        print(f"Error al obtener rondas del usuario {user_id}: {e}")
+        raise HTTPException(status_code=500, detail="Error al cargar el historial de rondas.")
     
 @app.post("/guardar-ronda")
 def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
@@ -270,22 +204,27 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
 
         if course_record:
             course_id = course_record._mapping["id"]
+            db.execute(text("UPDATE courses SET total_par = :t_par WHERE id = :cid"), {"t_par": payload.total_par, "cid": course_id})
+            
+            for h in payload.hoyos:
+                hoyo_existe = db.execute(text("SELECT id FROM holes WHERE course_id = :cid AND hole_number = :hnum"), {"cid": course_id, "hnum": h.numero}).fetchone()
+                if hoyo_existe:
+                    db.execute(text("UPDATE holes SET par = :par WHERE id = :hid"), {"par": h.par, "hid": hoyo_existe._mapping["id"]})
+                else:
+                    db.execute(text("INSERT INTO holes (course_id, hole_number, par) VALUES (:cid, :hnum, :par)"), {"cid": course_id, "hnum": h.numero, "par": h.par})
         else:
-            # 1.1 Si no existe, lo creamos en la tabla courses
             insert_course = text("""
                 INSERT INTO courses (name, city, country, total_par)
                 VALUES (:name, :city, :country, :total_par)
             """)
-            res_course = db.execute(insert_course, {
+            db.execute(insert_course, {
                 "name": payload.course.club_name,
                 "city": payload.course.city,
                 "country": payload.course.country,
                 "total_par": payload.total_par
             })
-            # Obtenemos el ID del campo recién creado
             course_id = db.execute(text("SELECT LAST_INSERT_ID()")).scalar()
 
-            # 1.2 Creamos la configuración de sus hoyos en la tabla holes
             insert_hole = text("""
                 INSERT INTO holes (course_id, hole_number, par)
                 VALUES (:course_id, :hole_number, :par)
@@ -297,7 +236,7 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
                     "par": h.par
                 })
 
-        # 2. CREAR LA RONDA (Tabla rounds)
+        # 2. CREAR LA RONDA
         insert_round = text("""
             INSERT INTO rounds (user_id, course_id, date, total_strokes, notes)
             VALUES (:user_id, :course_id, :date, :total_strokes, 'Ronda guardada desde la app')
@@ -310,7 +249,7 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
         })
         round_id = db.execute(text("SELECT LAST_INSERT_ID()")).scalar()
 
-        # 3. GUARDAR LOS GOLPES POR HOYO (Tabla hole_scores)
+        # 3. GUARDAR LOS GOLPES
         insert_score = text("""
             INSERT INTO hole_scores (round_id, hole_id, strokes)
             VALUES (
@@ -320,7 +259,6 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
             )
         """)
         for h in payload.hoyos:
-            # Solo guardamos los hoyos que el usuario haya rellenado realmente
             if h.golpes is not None and h.golpes > 0:
                 db.execute(insert_score, {
                     "round_id": round_id,
@@ -329,10 +267,75 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
                     "strokes": h.golpes
                 })
 
-        db.commit() # Confirmar guardado masivo en MySQL
-        return {"mensaje": "¡Tarjeta guardada con éxito!"}
+        # 4. RECALCULAR HÁNDICAP
+        query_recalculo = text("""
+            SELECT AVG(r.total_strokes - c.total_par) as nuevo_handicap
+            FROM rounds r
+            JOIN courses c ON r.course_id = c.id
+            WHERE r.user_id = :user_id
+        """)
+        resultado = db.execute(query_recalculo, {"user_id": payload.user_id}).fetchone()
+        
+        valor_handicap = resultado.nuevo_handicap if resultado and resultado.nuevo_handicap is not None else 0.0
+        handicap_redondeado = round(float(valor_handicap), 1)
+
+        db.execute(text("UPDATE users SET handicap = :handicap WHERE id = :user_id"), {"handicap": handicap_redondeado, "user_id": payload.user_id})
+
+        db.commit()
+        
+        return {
+            "mensaje": "¡Tarjeta guardada con éxito!",
+            "nuevo_handicap": handicap_redondeado
+        }
 
     except Exception as e:
-        db.rollback() # Si algo falla, cancelamos todo para no dejar datos a medias
+        db.rollback()
         print(f"Error al guardar ronda: {e}")
-        raise HTTPException(status_code=500, detail="Error interno al guardar la ronda")
+        raise HTTPException(status_code=500, detail=f"Error interno al guardar la ronda: {str(e)}")
+    
+@app.get("/rondas/ultima/detalle/{user_id}") 
+def obtener_detalle_ultima_ronda(user_id: int, db: Session = Depends(get_db)):
+    try:
+        # 1. Buscamos el ID de la última ronda real que registró este usuario
+        query_ronda = text("""
+            SELECT id FROM rounds 
+            WHERE user_id = :user_id 
+            ORDER BY date DESC, r.id DESC LIMIT 1
+        """)
+        # Nota: Si da error por la 'r.id' de tu estructura anterior, déjalo como 'id DESC'
+        query_ronda = text("""
+            SELECT id FROM rounds 
+            WHERE user_id = :user_id 
+            ORDER BY date DESC, id DESC LIMIT 1
+        """)
+        ronda = db.execute(query_ronda, {"user_id": user_id}).fetchone()
+        
+        if not ronda:
+            return [] # Si no hay rondas, devolvemos lista vacía
+            
+        round_id = ronda._mapping["id"]
+        
+        # 2. Traemos SOLO los hoyos jugados en ESA ronda específica cruzados con sus golpes reales
+        query_detalles = text("""
+            SELECT h.hole_number, h.par, hs.strokes AS golpes
+            FROM hole_scores hs
+            JOIN holes h ON hs.hole_id = h.id
+            WHERE hs.round_id = :round_id
+            ORDER BY h.hole_number ASC
+        """)
+        resultados = db.execute(query_detalles, {"round_id": round_id}).fetchall()
+        
+        datos_hoyos = []
+        for fila in resultados:
+            f_dict = fila._mapping
+            datos_hoyos.append({
+                "hole_number": f_dict["hole_number"],
+                "par": f_dict["par"],
+                "golpes": f_dict["golpes"]
+            })
+            
+        return datos_hoyos
+        
+    except Exception as e:
+        print(f"Error al obtener detalle de la última ronda: {e}")
+        raise HTTPException(status_code=500, detail="Error al cargar la gráfica.")
