@@ -12,7 +12,6 @@ function NuevaRonda() {
   const [campoSeleccionado, setCampoSeleccionado] = useState(null);
   const [cargando, setCargando] = useState(true);
 
-  // Cargar campos al iniciar
   // Cargar campos al iniciar y limpiarlos
   useEffect(() => {
   const cargarDatos = async () => {
@@ -54,7 +53,6 @@ function NuevaRonda() {
   const hoyosJugados = hoyos.filter(h => h.golpes !== '').length;
   const parAcumuladoJugado = hoyos.reduce((acc, h) => h.golpes !== '' ? acc + h.par : acc, 0);
   const diferencia = totalGolpes - parAcumuladoJugado;
-// ... (Tus cálculos automáticos como totalPar, totalGolpes, etc. se quedan igual)
 
   const formatearDiferencia = () => {
     if (hoyosJugados === 0) return '0';
@@ -76,8 +74,16 @@ function NuevaRonda() {
   };
 
   // --- NUEVA FUNCIÓN: ENVIAR A LA BASE DE DATOS ---
-const guardarRonda = async (e) => {
+  const guardarRonda = async (e) => {
     e.preventDefault();
+
+    // 1. VALIDACIÓN: Bloqueamos si hay hoyos sin golpes o en 0
+    const hoyosIncompletos = hoyos.some(hoyo => hoyo.golpes === '' || hoyo.golpes <= 0);
+    
+    if (hoyosIncompletos) {
+        alert("⚠️ Por favor, introduce la cantidad de golpes en todos los hoyos. No puedes dejarlos vacíos ni en cero.");
+        return; // Detiene la ejecución aquí
+    }
 
     if (!campoSeleccionado) {
         alert("Por favor, selecciona un campo de golf del desplegable.");
@@ -103,7 +109,7 @@ const guardarRonda = async (e) => {
         hoyos: hoyos.map(h => ({
             numero: h.numero,
             par: h.par,
-            golpes: h.golpes === '' ? null : h.golpes
+            golpes: h.golpes
         }))
     };
 
@@ -114,7 +120,6 @@ const guardarRonda = async (e) => {
             body: JSON.stringify(payload)
         });
 
-        // IMPORTANTE: Extraemos los datos aquí
         const data = await response.json();
 
         if (response.ok) {
@@ -124,7 +129,7 @@ const guardarRonda = async (e) => {
                 localStorage.setItem('usuarioGolfTracker', JSON.stringify(usuario));
             }
 
-            alert("⛳ ¡Ronda guardada con éxito!");
+            alert(" ¡Ronda guardada con éxito!");
             navigate('/misRondas');
         } else {
             alert(`Hubo un problema: ${data.detail}`);
@@ -134,6 +139,7 @@ const guardarRonda = async (e) => {
         alert("Fallo de conexión. Revisa que el servidor esté encendido.");
     }
   };
+
   return (
     <>
       <Encabezado />
@@ -141,7 +147,7 @@ const guardarRonda = async (e) => {
       <div className="nueva-ronda-seccion">
         <div className="ronda-contenedor">
 
-          {/* CABECERA DINÁMICA UTILIZANDO CLUB_NAME */}
+          {/* CABECERA DINÁMICA */}
           <div className="ronda-header dinamico">
             <div className="info-titulo">
               <h2 className="titulo-truncado" title={campoSeleccionado ? campoSeleccionado.club_name : 'Nueva Ronda de Golf'}>
@@ -150,7 +156,7 @@ const guardarRonda = async (e) => {
 
               {campoSeleccionado ? (
                 <p className="subtitulo-ubicacion titulo-truncado" title={`${campoSeleccionado.address || 'Sin dirección'}, ${campoSeleccionado.city}, ${campoSeleccionado.country}`}>
-                  📍 {campoSeleccionado.location.address || 'Sin dirección'}
+                  📍 {campoSeleccionado.location?.address || 'Sin dirección'}
                 </p>
               ) : (
                 <p className="subtitulo-ubicacion">{fechaActual}</p>
@@ -228,6 +234,7 @@ const guardarRonda = async (e) => {
                             placeholder="-"
                             value={hoyo.golpes}
                             onChange={(e) => handleInputChange(index, 'golpes', e.target.value)}
+                            required /* DOBLE SEGURIDAD: Evita el envío si el campo está vacío */
                           />
                         </td>
                         <td className={`diff-col ${diffHoyo > 0 ? 'text-rojo' : diffHoyo < 0 ? 'text-azul' : ''}`}>

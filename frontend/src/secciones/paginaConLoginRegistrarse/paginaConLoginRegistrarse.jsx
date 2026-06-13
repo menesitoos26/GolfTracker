@@ -5,6 +5,7 @@ import PaginaInicial from '../paginaInicial/paginaInicial'
 import PaginaUsuario from '../paginaUsuario/paginaUsuario'
 import NuevaRonda from '../nuevaRonda/nuevaRonda'
 import MisRondas from '../misRondas/misRondas'
+import PaginaEditUsuario from '../paginaEditUsuario/paginaEditUsuario'
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -74,6 +75,13 @@ function PaginaLR() {
             element={
               <MisRondas>
               </MisRondas>
+            }
+          />
+          <Route
+            path="/editar"
+            element={
+              <PaginaEditUsuario>
+              </PaginaEditUsuario>
             }
           />
         </Routes>
