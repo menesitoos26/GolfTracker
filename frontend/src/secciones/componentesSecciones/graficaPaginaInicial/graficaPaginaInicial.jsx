@@ -1,21 +1,40 @@
 import React from 'react';
-import { BarChart, Bar, ResponsiveContainer, CartesianGrid, Tooltip, XAxis, YAxis, Legend } from 'recharts';
+// IMPORTANTE: Hemos cambiado BarChart y Bar por LineChart y Line
+import { LineChart, Line, ResponsiveContainer, CartesianGrid, Tooltip, XAxis, YAxis, Legend } from 'recharts';
 import { Link } from 'react-router-dom';
 import './graficaPaginaInicial.css';
 
 function GraficaPaginaInicial({ datos, handicapActual, nombreUser }) {
 
+  // Si no hay datos, dejamos la tarjeta vacía con un mensaje
   if (!datos || datos.length === 0) {
-    return <div className="tarjeta-progreso">Cargando rendimiento de tu última ronda...</div>;
+    return (
+      <div className="tarjeta-progreso">
+        <div className="cabecera-progreso">
+          <div className="titulos">
+            <span className="subtitulo">Rendimiento por Hoyo</span>
+            <h2 className="titulo-principal">Bienvenido {nombreUser}</h2>
+          </div>
+          <div className="nuevaRonda">
+            <button>
+              <Link to="/nuevaRonda"> + Nueva ronda</Link>
+            </button>
+          </div>
+        </div>
+        <div style={{ textAlign: 'center', color: '#888', marginTop: '20px', paddingBottom: '20px' }}>
+          No hay datos suficientes para mostrar la gráfica. ¡Juega tu primera ronda!
+        </div>
+      </div>
+    );
   }
 
-  // Normalizamos los datos de forma ultra segura
-// Asegúrate de que no haya ninguna 'i' suelta por ahí
-const datosProcesados = datos.map((d) => ({
+  // Normalizamos los datos de forma segura
+  const datosProcesados = datos.map((d) => ({
     hoyo: d.hole_number || d.numero || 0,
     parNecesario: d.par || 0,
     tusGolpes: d.golpes || d.strokes || 0
-}));
+  }));
+
   // --- METRICAS BASADAS SÓLO EN LO JUGADO ---
   const totalHoyos = datosProcesados.length;
   const totalPar = datosProcesados.reduce((acc, d) => acc + d.parNecesario, 0);
@@ -59,7 +78,7 @@ const datosProcesados = datos.map((d) => ({
 
       <div className="contenedor-grafica">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={datosProcesados} margin={{ top: 10, right: 20, left: -20, bottom: 5 }}>
+          <LineChart data={datosProcesados} margin={{ top: 10, right: 20, left: -20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} horizontal={true} stroke="#333" />
             <XAxis dataKey="hoyo" stroke="#888" tickLine={false} dy={10} />
             <YAxis stroke="#888" tickLine={false} domain={[0, valorMaximo + 2]} dx={-5} />
@@ -70,11 +89,28 @@ const datosProcesados = datos.map((d) => ({
             />
             <Legend verticalAlign="top" height={36} wrapperStyle={{ color: '#fff' }} />
 
-            {/* Barra Gris/Blanca para el Par */}
-            <Bar name="Par necesario" dataKey="parNecesario" fill="#E2E8F0" radius={[4, 4, 0, 0]} />
-            {/* Barra Verde Lima para tus Golpes Reales */}
-            <Bar name="Tus golpes" dataKey="tusGolpes" fill="#A3E635" radius={[4, 4, 0, 0]} />
-          </BarChart>
+            {/* LÍNEA ROJA: Par necesario */}
+            <Line 
+              type="monotone" 
+              name="Par necesario" 
+              dataKey="parNecesario" 
+              stroke="#ef4444" 
+              strokeWidth={3} 
+              dot={{ r: 4 }} 
+              activeDot={{ r: 6 }} 
+            />
+            
+            {/* LÍNEA VERDE: Tus Golpes */}
+            <Line 
+              type="monotone" 
+              name="Tus golpes" 
+              dataKey="tusGolpes" 
+              stroke="#22c55e" 
+              strokeWidth={3} 
+              dot={{ r: 4 }} 
+              activeDot={{ r: 6 }} 
+            />
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>

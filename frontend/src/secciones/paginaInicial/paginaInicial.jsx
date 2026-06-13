@@ -23,23 +23,27 @@ function PaginaInicial() {
     }
 
     // 3. Consultar a tu API (FastAPI) el último campo creado
-    const cargarUltimoCampo = async () => {
-      try {
-        const response = await fetch('/api/course/ultimo');
+   const cargarUltimoCampo = async () => {
+        const usuarioGuardado = localStorage.getItem('usuarioGolfTracker');
+        if (!usuarioGuardado) return;
         
-        if (response.ok) {
-          const data = await response.json();
-          // data.holes es el array con los { hole_number: X, par: Y }
-          setDatosGrafica(data.holes); 
-          setNombreCampo(data.name);
-        } else {
-          // Si el servidor responde con error (ej. base de datos vacía)
-          inyectarCerosPorDefecto();
+        const usuario = JSON.parse(usuarioGuardado);
+
+        try {
+            // EL SECRETO ESTÁ AQUÍ: Añadir /api/ al principio de la URL
+            const response = await fetch(`/api/rondas/ultima/detalle/${usuario.id}`);
+            
+            if (response.ok) {
+                const data = await response.json(); 
+                setDatosGrafica(data); 
+                setNombreCampo("Última Ronda Jugada");
+            } else {
+                inyectarCerosPorDefecto();
+            }
+        } catch (error) {
+            console.error("Error al conectar con la API:", error);
+            inyectarCerosPorDefecto();
         }
-      } catch (error) {
-        console.error("Error al conectar con la API de campos:", error);
-        inyectarCerosPorDefecto();
-      }
     };
 
     // Función de seguridad: Genera 18 hoyos a cero para que la gráfica no explote
@@ -62,10 +66,6 @@ function PaginaInicial() {
       <DosBotonesYTextPagInicial />
       
       <div className='parteGrafica'>
-        {/* Título opcional para saber qué campo estamos viendo en la gráfica */}
-        <h3 style={{ color: '#C1E9B6', textAlign: 'center', marginBottom: '15px', fontSize: '18px' }}>
-          Visualizando campo: {nombreCampo}
-        </h3>
 
         {/* Le pasamos a tu gráfica los datos reales procesados */}
         <GraficaPaginaInicial
