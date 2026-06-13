@@ -263,7 +263,6 @@ function NuevaRonda() {
           </form>
         </div>
       </div>
-      <div className='FondoUsuarioSeccion'></div>
     </>
   );
 }
