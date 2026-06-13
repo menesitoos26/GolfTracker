@@ -78,7 +78,7 @@ function PaginaLR() {
             }
           />
           <Route
-            path="/editar"
+            path="/editarPerfil"
             element={
               <PaginaEditUsuario>
               </PaginaEditUsuario>
