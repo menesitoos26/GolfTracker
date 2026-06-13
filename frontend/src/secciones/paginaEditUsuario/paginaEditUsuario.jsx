@@ -1,27 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // IMPORTANTE: Necesario para redireccionar
 import Encabezado from '../componentesSecciones/encabezado/encabezado';
 import './paginaEditUsuario.css';
 
 function PaginaEditUsuario() {
+    const navigate = useNavigate(); // Inicializamos el navegador
     const [datosFormulario, setDatosFormulario] = useState({
         name: '',
         email: '',
-        password: '' // Opcional por si quiere cambiarla
+        password: ''
     });
     const [mensaje, setMensaje] = useState('');
+    const [usuarioId, setUsuarioId] = useState(null);
 
     useEffect(() => {
-        // Al cargar la página, rellenamos el formulario con los datos actuales
         const usuarioGuardado = localStorage.getItem('usuarioGolfTracker');
         if (usuarioGuardado) {
             const usuario = JSON.parse(usuarioGuardado);
+            setUsuarioId(usuario.id);
             setDatosFormulario({
                 name: usuario.name || '',
                 email: usuario.email || '',
-                password: '' // Dejamos la contraseña en blanco por seguridad
+                password: '' 
             });
+        } else {
+            navigate('/login'); // Si no hay sesión, al login
         }
-    }, []);
+    }, [navigate]);
 
     const manejarCambio = (e) => {
         const { name, value } = e.target;
@@ -34,23 +39,40 @@ function PaginaEditUsuario() {
     const guardarCambios = async (e) => {
         e.preventDefault();
         
-        // Validación básica
         if (!datosFormulario.name || !datosFormulario.email) {
             setMensaje("El nombre y el correo son obligatorios.");
             return;
         }
 
-        /* =========================================================
-        NOTA PARA EL BACKEND: 
-        Aquí en el futuro harás el fetch hacia tu API, por ejemplo:
-        const response = await fetch(`/api/usuarios/editar/${usuario.id}`, { ... })
-        =========================================================
-        */
-        
-        setMensaje("¡Simulación exitosa! (Falta conectar con FastAPI)");
-        
-        // Si tuvieras backend, aquí actualizarías el localStorage con los nuevos datos
-        // y redirigirías al usuario de vuelta al perfil.
+        try {
+            // Hacemos la petición a la nueva ruta del backend
+            const response = await fetch(`/api/usuarios/editar/${usuarioId}`, {
+                method: 'PUT', // Usamos PUT para actualizar datos
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datosFormulario)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // 1. Actualizamos los datos en el localStorage para que el resto de la web se entere
+                const usuarioActual = JSON.parse(localStorage.getItem('usuarioGolfTracker'));
+                usuarioActual.name = data.name;
+                usuarioActual.email = data.email;
+                localStorage.setItem('usuarioGolfTracker', JSON.stringify(usuarioActual));
+
+                // 2. Avisamos y devolvemos al usuario a su perfil
+                alert("¡Perfil actualizado con éxito!");
+                navigate('/paginaUsuario'); // Cambia esta ruta si tu perfil se llama de otra forma
+            } else {
+                setMensaje(data.detail || "Error al actualizar el perfil.");
+            }
+        } catch (error) {
+            console.error("Error de conexión:", error);
+            setMensaje("Fallo de conexión con el servidor.");
+        }
     };
 
     return (

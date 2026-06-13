@@ -25,6 +25,11 @@ def get_db():
 
 # Modelos para validar los datos que llegan desde React
 
+class EditarUsuario(BaseModel):
+    name: str
+    email: str
+    password: Optional[str] = "" # Es opcional porque el usuario podría no querer cambiarla
+
 class RegistroUsuario(BaseModel):
     name: str
     email: str
@@ -295,6 +300,7 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
     
 @app.get("/rondas/ultima/detalle/{user_id}") 
 def obtener_detalle_ultima_ronda(user_id: int, db: Session = Depends(get_db)):
+
     try:
         # 1. Buscamos el ID de la última ronda real que registró este usuario
         query_ronda = text("""
@@ -339,3 +345,58 @@ def obtener_detalle_ultima_ronda(user_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         print(f"Error al obtener detalle de la última ronda: {e}")
         raise HTTPException(status_code=500, detail="Error al cargar la gráfica.")
+    
+@app.put("/usuarios/editar/{user_id}")
+def editar_usuario(user_id: int, datos: EditarUsuario, db: Session = Depends(get_db)):
+    try:
+        # 1. Comprobamos si el nuevo correo ya lo está usando otra persona (que no sea él mismo)
+        query_email = text("SELECT id FROM users WHERE email = :email AND id != :user_id")
+        email_ocupado = db.execute(query_email, {"email": datos.email, "user_id": user_id}).fetchone()
+        
+        if email_ocupado:
+            raise HTTPException(status_code=400, detail="Ese correo ya está registrado por otra persona.")
+
+        # 2. Comprobamos si el usuario escribió una nueva contraseña
+        if datos.password and len(datos.password.strip()) > 0:
+            # Encriptamos la nueva contraseña
+            salt = bcrypt.gensalt()
+            password_hash = bcrypt.hashpw(datos.password.encode('utf-8'), salt).decode('utf-8')
+            
+            query_update = text("""
+                UPDATE users 
+                SET name = :name, email = :email, password_hash = :password_hash 
+                WHERE id = :user_id
+            """)
+            db.execute(query_update, {
+                "name": datos.name,
+                "email": datos.email,
+                "password_hash": password_hash,
+                "user_id": user_id
+            })
+        else:
+            # Si dejó la contraseña en blanco, solo actualizamos nombre y correo
+            query_update = text("""
+                UPDATE users 
+                SET name = :name, email = :email 
+                WHERE id = :user_id
+            """)
+            db.execute(query_update, {
+                "name": datos.name,
+                "email": datos.email,
+                "user_id": user_id
+            })
+
+        db.commit()
+
+        return {
+            "mensaje": "¡Perfil actualizado con éxito!",
+            "name": datos.name,
+            "email": datos.email
+        }
+
+    except HTTPException as http_ex:
+        raise http_ex
+    except Exception as e:
+        db.rollback()
+        print(f"Error al editar perfil: {e}")
+        raise HTTPException(status_code=500, detail="Error interno al actualizar los datos.")
