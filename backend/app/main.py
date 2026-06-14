@@ -177,22 +177,23 @@ def obtener_rondas_usuario(user_id: int, db: Session = Depends(get_db)):
 @app.post("/guardar-ronda")
 def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
     try:
-        # COMPROBAR SI EL CAMPO YA EXISTE
-        query_course = text("SELECT id FROM courses WHERE name = :name LIMIT 1")
-        # resultados de campos
-        course_record = db.execute(query_course, {"name": payload.course.club_name}).fetchone()
+        # 1. Comprobamos si ya existe el campo con el mismo NOMBRE y mismo PAR TOTAL
+        query_course = text("""
+            SELECT id FROM courses 
+            WHERE name = :name AND total_par = :total_par 
+            LIMIT 1
+        """)
+        course_record = db.execute(query_course, {
+            "name": payload.course.club_name, 
+            "total_par": payload.total_par
+        }).fetchone()
 
         if course_record:
-            # recuperar el id del campo convirtiendolo en diccionario
+            # ¡SÚPER LIMPIO! Si el campo ya existe con esa configuración, solo obtenemos su ID.
+            # No actualizamos nada del campo ni de sus hoyos. Protegemos el historial.
             course_id = course_record._mapping["id"]
-            # recorremos los hoyos de ese campo 
-            for h in payload.hoyos:
-                hoyo_existe = db.execute(text("SELECT id FROM holes WHERE course_id = :cid AND hole_number = :hnum"), {"cid": course_id, "hnum": h.numero}).fetchone()
-                if hoyo_existe:
-                    db.execute(text("UPDATE holes SET par = :par WHERE id = :hid"), {"par": h.par, "hid": hoyo_existe._mapping["id"]})
-                else:
-                    db.execute(text("INSERT INTO holes (course_id, hole_number, par) VALUES (:cid, :hnum, :par)"), {"cid": course_id, "hnum": h.numero, "par": h.par})
         else:
+            # Si el campo no existe (o tiene un par total diferente), lo creamos de cero con sus hoyos
             insert_course = text("""
                 INSERT INTO courses (name, city, country, total_par)
                 VALUES (:name, :city, :country, :total_par)
@@ -229,7 +230,7 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
         })
         round_id = db.execute(text("SELECT LAST_INSERT_ID()")).scalar()
 
-        # 3. GUARDAR LOS GOLPES
+        # 3. GUARDAR LOS GOLPES HOYO POR HOYO
         insert_score = text("""
             INSERT INTO hole_scores (round_id, hole_id, strokes)
             VALUES (
