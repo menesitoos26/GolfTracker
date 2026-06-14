@@ -28,17 +28,23 @@ function GraficaPaginaInicial({ datos, handicapActual, nombreUser }) {
     );
   }
 
-  // Normalizamos los datos de forma segura
+  // Aseguranos que si los datos entren mal que los pongan en cero en la array de datos
   const datosProcesados = datos.map((d) => ({
-    hoyo: d.hole_number || d.numero || 0,
+    hoyo: d.hole_number || 0,
     parNecesario: d.par || 0,
-    tusGolpes: d.golpes || d.strokes || 0
+    tusGolpes: d.strokes || 0
   }));
 
   // --- METRICAS BASADAS SÓLO EN LO JUGADO ---
+
   const totalHoyos = datosProcesados.length;
+  // reduce, pasa por toda la arrya
+  // acc = acumulador 
+  // d = elemento actual del array.
   const totalPar = datosProcesados.reduce((acc, d) => acc + d.parNecesario, 0);
+
   const valorMaximo = Math.max(...datosProcesados.map(d => Math.max(d.parNecesario, d.tusGolpes)));
+  // toFixed es para redondear
   const mediaPar = totalHoyos > 0 ? (totalPar / totalHoyos).toFixed(1) : 0;
 
   return (

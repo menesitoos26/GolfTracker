@@ -22,15 +22,16 @@ function PaginaInicial() {
       });
     }
 
-    // 3. Consultar a tu API (FastAPI) el último campo creado
+    // 3. Consultar a tu API (FastAPI) el último campo creado para coger los datos
    const cargarUltimoCampo = async () => {
         const usuarioGuardado = localStorage.getItem('usuarioGolfTracker');
+        
         if (!usuarioGuardado) return;
         
         const usuario = JSON.parse(usuarioGuardado);
 
         try {
-            // EL SECRETO ESTÁ AQUÍ: Añadir /api/ al principio de la URL
+            // Cogemos el fetch de rondas ultimas con el id del usuairo
             const response = await fetch(`/api/rondas/ultima/detalle/${usuario.id}`);
             
             if (response.ok) {

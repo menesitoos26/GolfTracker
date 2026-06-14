@@ -15,7 +15,7 @@ DATABASE_URL = "mysql+pymysql://golf_user:golf_pass@db:3306/golf_db"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Dependencia para abrir y cerrar la conexión a la base de datos limpiamente
+# Dependencia para abrir y cerrar la conexión a la base de datos 
 def get_db():
     db = SessionLocal()
     try:
@@ -25,25 +25,27 @@ def get_db():
 
 # Modelos para validar los datos que llegan desde React
 
+# Modelo para cuando se edita el eusuario
 class EditarUsuario(BaseModel):
     name: str
     email: str
-    password: Optional[str] = "" # Es opcional porque el usuario podría no querer cambiarla
+    password: Optional[str] = "" # hace que la contraseña sea algo oopcional y no obligatoria
 
+# Modelo para resgistrar usurario
 class RegistroUsuario(BaseModel):
     name: str
     email: str
     password: str
-
+# Modelo para el login usurario
 class LoginUsuario(BaseModel):
     email: str
     password: str
-
+# Modelo para coger los datos de un hoyo en especifico
 class HoyoData(BaseModel):
     numero: int
     par: int
     golpes: Optional[int] = None
-
+# Modelo para coger los cursos que contien los hoyos en especifico
 class CursoData(BaseModel):
     club_name: str
     city: str = ""
@@ -67,50 +69,55 @@ def health():
 
 
 # --- RUTAS DE LA API (Sin '/api' porque Nginx ya se encarga de quitarlo) ---
-
+# Ruta para poder guardar el usuario en la base de datos
 @app.post("/registro")
 def ruta_registro(datos: RegistroUsuario, db: Session = Depends(get_db)):
     try:
         # Encriptamos la contraseña por seguridad antes de guardarla
         salt = bcrypt.gensalt()
         password_hash = bcrypt.hashpw(datos.password.encode('utf-8'), salt).decode('utf-8')
-
+        # peticion a la base de datos
         query = text("""
             INSERT INTO users (name, email, password_hash)
             VALUES (:name, :email, :password_hash)
         """)
+        # guardar datos de la peticion
         db.execute(query, {
             "name": datos.name,
             "email": datos.email,
             "password_hash": password_hash
         })
+
         db.commit() # Confirmamos el guardado en MySQL
+
         return {"mensaje": "Usuario registrado con éxito"}
     except Exception as e:
         db.rollback()
         print(f"Error en base de datos: {e}")
         raise HTTPException(status_code=400, detail="El correo ya está registrado o hubo un error.")
 
-
+# Ruta para poder obtener el usuario en la base de datos y comprobarlo
 @app.post("/login")
 def ruta_login(datos: LoginUsuario, db: Session = Depends(get_db)):
     try:
-        # 1. MODIFICADO: Ahora también seleccionamos la columna 'handicap' de la tabla users
+        # Seleccionamos los datos del usuario
         query = text("SELECT id, name, email, password_hash, handicap FROM users WHERE email = :email")
         result = db.execute(query, {"email": datos.email})
+        # obtenemos los datos almacenados en usuario 
         usuario = result.fetchone()
 
         if not usuario:
             raise HTTPException(status_code=401, detail="Correo o contraseña incorrectos")
 
-        # 2. SEGURO PARA SQLALCHEMY 2.0: Convertimos la fila en un diccionario limpio
+        # Convertimos la fila en un diccionario limpio con ._mapping
         usuario_dict = usuario._mapping
 
-        # 3. Convertimos los textos a formato binario (bytes) para que bcrypt trabaje bien
+        # Convertimos los textos a formato binario (bytes) para que bcrypt trabaje bien
         password_bytes = datos.password.encode('utf-8')
         hash_en_base_datos = usuario_dict["password_hash"].encode('utf-8')
 
-        # 4. Comprobamos si la contraseña coincide con su hash encriptado
+        # Comprobamos si la contraseña coincide con su hash encriptado del usuario buscado
+        # bcrypt.checkpw es para verificar contraseñas enctiptadas
         if bcrypt.checkpw(password_bytes, hash_en_base_datos):
             return {
                 "mensaje": "Login exitoso",
@@ -118,7 +125,7 @@ def ruta_login(datos: LoginUsuario, db: Session = Depends(get_db)):
                     "id": usuario_dict["id"],
                     "name": usuario_dict["name"],
                     "email": usuario_dict["email"],
-                    # MODIFICADO: Enviamos el hándicap a React (si es None en MySQL, mandamos null)
+                    # Enviamos el hándicap a React (si es None en MySQL, mandamos null)
                     "handicap": float(usuario_dict["handicap"]) if usuario_dict["handicap"] is not None else None
                 }
             }
@@ -130,46 +137,8 @@ def ruta_login(datos: LoginUsuario, db: Session = Depends(get_db)):
     except Exception as e:
         print(f"--- ERROR CRÍTICO DETECTADO EN EL LOGIN ---: {e}")
         raise HTTPException(status_code=500, detail=f"Error interno en el servidor: {e}")
-    
 
-@app.get("/course/ultimo")
-def obtener_ultimo_course(db: Session = Depends(get_db)):
-    try:
-        query_course = text("""
-            SELECT c.id, c.name, c.total_par 
-            FROM courses c
-            JOIN rounds r ON c.id = r.course_id
-            ORDER BY r.id DESC LIMIT 1
-        """)
-        result_course = db.execute(query_course).fetchone()
-        
-        if not result_course: 
-            result_course = db.execute(text("SELECT id, name, total_par FROM courses ORDER BY id DESC LIMIT 1")).fetchone()
-            
-        if not result_course:
-            hoyos_ceros = [{"hole_number": i, "par": 0} for i in range(1, 19)]
-            return {"name": "Sin campos registrados", "total_par": 0, "holes": hoyos_ceros}
-            
-        course_dict = result_course._mapping
-        course_id = course_dict["id"]
-        
-        query_holes = text("SELECT hole_number, par FROM holes WHERE course_id = :course_id ORDER BY hole_number ASC")
-        result_holes = db.execute(query_holes, {"course_id": course_id}).fetchall()
-        
-        hoyos = [dict(h._mapping) for h in result_holes]
-        if not hoyos:
-            hoyos = [{"hole_number": i, "par": 0} for i in range(1, 19)]
-            
-        return {
-            "name": course_dict["name"],
-            "total_par": course_dict["total_par"],
-            "holes": hoyos
-        }
-        
-    except Exception as e:
-        print(f"Error al obtener el último campo: {e}")
-        raise HTTPException(status_code=500, detail="Error interno del servidor")
-    
+# Obtener las rondas del usuario
 @app.get("/rondas/{user_id}")
 def obtener_rondas_usuario(user_id: int, db: Session = Depends(get_db)):
     try:
@@ -182,10 +151,13 @@ def obtener_rondas_usuario(user_id: int, db: Session = Depends(get_db)):
             ORDER BY r.date DESC, r.id DESC
         """)
         result = db.execute(query, {"user_id": user_id}).fetchall()
-        
+        # array para guardar las rondas
         rondas = []
+        # a fila se refiere a las filas de resultados de sql
         for fila in result:
+            # convertimos en diccionario las filas de resultados
             r_dict = fila._mapping
+            # añádimos datos a la arry vacia 
             rondas.append({
                 "id": r_dict["id"],
                 "date": str(r_dict["date"]),
@@ -195,22 +167,25 @@ def obtener_rondas_usuario(user_id: int, db: Session = Depends(get_db)):
                     "total_par": r_dict["total_par"]
                 }
             })
+            # devolveos un arrya con los datos de las rondas y sus campos
         return rondas
     except Exception as e:
         print(f"Error al obtener rondas del usuario {user_id}: {e}")
         raise HTTPException(status_code=500, detail="Error al cargar el historial de rondas.")
     
+
 @app.post("/guardar-ronda")
 def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
     try:
-        # 1. COMPROBAR SI EL CAMPO YA EXISTE
+        # COMPROBAR SI EL CAMPO YA EXISTE
         query_course = text("SELECT id FROM courses WHERE name = :name LIMIT 1")
+        # resultados de campos
         course_record = db.execute(query_course, {"name": payload.course.club_name}).fetchone()
 
         if course_record:
+            # recuperar el id del campo convirtiendolo en diccionario
             course_id = course_record._mapping["id"]
-            db.execute(text("UPDATE courses SET total_par = :t_par WHERE id = :cid"), {"t_par": payload.total_par, "cid": course_id})
-            
+            # recorremos los hoyos de ese campo 
             for h in payload.hoyos:
                 hoyo_existe = db.execute(text("SELECT id FROM holes WHERE course_id = :cid AND hole_number = :hnum"), {"cid": course_id, "hnum": h.numero}).fetchone()
                 if hoyo_existe:
