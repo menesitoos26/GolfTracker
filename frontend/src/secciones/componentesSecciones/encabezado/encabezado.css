@@ -175,8 +175,8 @@
 /* ===================================================
    =================================================== */
 @media (max-width: 768px) {
-  
-.encabezado-usuario-bloque a {
+
+.encabezado-usuario-bloque{
   flex-direction: column;
 }
   .encabezado-usuario {
