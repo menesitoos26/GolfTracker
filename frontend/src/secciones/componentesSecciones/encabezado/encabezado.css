@@ -175,8 +175,10 @@
 /* ===================================================
    =================================================== */
 @media (max-width: 768px) {
-
-
+  
+.encabezado-usuario-bloque a {
+  flex-direction: column;
+}
   .encabezado-usuario {
     flex-direction: column;
     margin-top: auto; 
