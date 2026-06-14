@@ -1,16 +1,11 @@
 .nueva-ronda-seccion {
     box-sizing: border-box;
     width: 100%;
-    
-    /* CAMBIO: Fijamos la altura al espacio restante debajo del encabezado (80px) */
     height: calc(100vh - 80px); 
-    
-    /* NUEVO: Hacemos que el scroll vertical ocurra SOLO dentro de esta sección */
     overflow-y: auto; 
-    
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Permite que empiece arriba y se desplace */
+    align-items: flex-start; 
     padding: 40px 20px;
     position: relative;
     z-index: 10;
@@ -40,7 +35,6 @@
     font-size: 14px;
 }
 
-/* PANEL SUPERIOR DE MARCADOR LIVE */
 .marcador-resumen {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -69,14 +63,14 @@
     color: rgb(193, 233, 182);
 }
 
-/* Colores condicionales del total */
+
 .marcador-item.status.sobre-par p { color: #ff6b6b; }
 .marcador-item.status.bajo-par p { color: #6bffb8; }
 
-/* DISEÑO DE LA TABLA (SCORECARD) */
+
 .tabla-scroll {
-    max-height: 400px; /* Limita la altura para que no sea infinita hacia abajo */
-    overflow-y: auto;  /* Scroll vertical interno muy cómodo */
+    max-height: 400px;
+    overflow-y: auto;  
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 25px;
@@ -95,7 +89,7 @@
     padding: 12px;
     font-size: 13px;
     text-transform: uppercase;
-    position: sticky; /* Deja los títulos fijos arriba al bajar el scroll */
+    position: sticky; 
     top: 0;
     z-index: 5;
 }
@@ -116,7 +110,6 @@
     padding-left: 20px !important;
 }
 
-/* DISEÑO DE LOS CAMPOS DE TEXTO INTERNOS */
 .tabla-scorecard input {
     width: 60px;
     background-color: rgb(65, 105, 70);
@@ -135,7 +128,7 @@
     background-color: rgb(85, 135, 90);
 }
 
-/* Quita las flechas por defecto de los inputs numéricos */
+
 .tabla-scorecard input::-webkit-outer-spin-button,
 .tabla-scorecard input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -146,9 +139,9 @@
     font-weight: bold;
 }
 .text-rojo { color: #ff6b6b; }
-.text-azul { color: #6bffb8; }
+.text-verde{ color: #6bffb8; }
 
-/* BOTONES FINALES */
+
 .ronda-acciones {
     display: flex;
     justify-content: flex-end;
@@ -212,7 +205,7 @@
     transition: background-color 0.2s, transform 0.2s;
 }
 
-/* Modificamos el header para que use Flexbox */
+
 .ronda-header.dinamico {
     display: flex;
     justify-content: space-between;
@@ -221,10 +214,9 @@
     text-align: left;
 }
 
-/* El truco del truncado */
 .info-titulo {
     flex: 1;
-    min-width: 0; /* Vital para que funcione el text-overflow */
+    min-width: 0; 
 }
 
 .titulo-truncado {
@@ -240,7 +232,7 @@
     margin: 0;
 }
 
-/* Selector a la derecha */
+
 .controles-derecha {
     min-width: 200px;
 }
@@ -256,10 +248,18 @@
     cursor: pointer;
 }
 
-/* Para móviles: Apilamos los elementos */
+
 @media (max-width: 600px) {
     .ronda-header.dinamico {
         flex-direction: column;
         align-items: stretch;
     }
+    .btn-delete-hoyos{
+        padding: 0px;
+    }
+    .btn-add-hoyos{
+        padding: 0px;
+    }
 }
+
+

@@ -2,7 +2,6 @@ import React from 'react';
 import { LineChart, Line, ResponsiveContainer, CartesianGrid, Tooltip } from 'recharts';
 import './dosBotonesYTextPagInicial.css';
 
-// Ahora el componente recibe "datos" y el "handicapActual" como propiedades (props)
 function DosBotonesYTextPagInicial() {
   
 

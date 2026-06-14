@@ -1,7 +1,7 @@
 // golfService.js
 const API_KEY = 'Key VX2PWAKS6HGOXGXRAVMUHWAEOU';
 export const obtenerCamposDeGolf = async () => {
-    // 1. REVISAR CACHÉ: Si ya los descargamos antes, los devolvemos al instante
+    // REVISAR CACHÉ: Si ya los descargamos antes, los devolvemos al instante
     const cache = sessionStorage.getItem('golf_courses_cache');
     if (cache) {
         return JSON.parse(cache);
@@ -24,7 +24,7 @@ export const obtenerCamposDeGolf = async () => {
         const data = await response.json();
         const courses = data.courses || data;
 
-        // 2. FILTRAR: Quitar repetidos y vacíos
+        // Quitar datos repetidos y vacíos
         const nombresVistos = new Set();
         const camposUnicos = courses.filter(campo => {
             if (!campo.club_name || nombresVistos.has(campo.club_name)) {
@@ -34,10 +34,10 @@ export const obtenerCamposDeGolf = async () => {
             return true;
         });
 
-        // 3. LIMITAR: Quedarnos estrictamente con los primeros 15 nombres
+        //  Quedarnos con los primeros 15 nombres
         const primeros15Campos = camposUnicos.slice(0, 15);
 
-        // 4. GUARDAR EN CACHÉ: Solo si la lista tiene datos
+        // Solo si la lista tiene datos
         if (primeros15Campos.length > 0) {
             sessionStorage.setItem('golf_courses_cache', JSON.stringify(primeros15Campos));
         }

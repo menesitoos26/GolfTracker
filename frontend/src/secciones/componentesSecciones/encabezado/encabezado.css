@@ -1,13 +1,13 @@
-/* --- CONTENEDOR PRINCIPAL --- */
+
 .encabezado-container {
-  box-sizing: border-box; /* Previene el problema de desbordamiento horizontal */
+  box-sizing: border-box; 
   width: 100%;
   height: 80px;
   background-color: var(--verde-header);
   display: flex;
-  justify-content: space-between; /* Logo a la izq, menú a la der */
+  justify-content: space-between; 
   align-items: center;
-  padding: 0 40px; /* Márgenes laterales */
+  padding: 0 40px; 
   color: var(--blanco-crema);
   box-shadow: var(--sombra-suave, 0 4px 6px rgba(0, 0, 0, 0.1));
   position: sticky;
@@ -20,7 +20,7 @@
   gap: 10px;
   width: 200px;
 }
-/* --- LOGO --- */
+
 .encabezado-logo a {
   font-family: var(--fuente-titulos, sans-serif);
   font-size: 22px;
@@ -36,17 +36,16 @@
   object-fit: contain;
 }
 
-/* --- NAVEGACIÓN Y ENLACES (ESCRITORIO) --- */
 .encabezado-nav {
   display: flex;
   align-items: center;
-  gap: 40px; /* Separación entre los links y el botón */
+  gap: 40px; 
 }
 
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 25px; /* Separación entre links */
+  gap: 25px; 
   margin: 0;
   padding: 0;
 }
@@ -63,7 +62,6 @@
   color: var(--verde-brillante);
 }
 
-/* --- BOTÓN INICIO SESIÓN --- */
 .btn-inicio-sesion {
   text-decoration: none;
   border: 1.5px solid var(--blanco-crema);
@@ -76,10 +74,9 @@
 
 .btn-inicio-sesion:hover {
   background-color: var(--blanco-crema);
-  color: var(--verde-header); /* Se invierten los colores al pasar el ratón */
+  color: var(--verde-header); 
 }
 
-/* --- BOTÓN HAMBURGUESA (Oculto en escritorio) --- */
 .menu-hamburguesa {
   display: none;
   background: none;
@@ -89,15 +86,13 @@
   cursor: pointer;
   transition: transform 0.3s;
 }
-/* ... (Manten todo el CSS anterior que te pasé e introduce estas nuevas clases) ... */
 
-/* --- BLOQUE DE PERFIL DE USUARIO --- */
 .encabezado-usuario {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 6px 16px;
-  background-color: var(--verde-oscuro); /* rgb(45, 80, 50) */
+  background-color: var(--verde-oscuro); 
   border-radius: 30px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -106,7 +101,7 @@
 .usuario-info {
   display: flex;
   flex-direction: column;
-  text-align: right; /* Alinea el texto hacia la foto en escritorio */
+  text-align: right; 
 }
 
 .usuario-nombre {
@@ -118,12 +113,11 @@
 .usuario-email {
   font-size: 12px;
   font-weight: 400;
-  color: var(--verde-brillante); /* rgb(193, 233, 182) para que resalte suavemente */
-  text-transform: lowercase; /* Forzamos que el correo salga en minúsculas */
-  opacity: 0.85; /* Le damos una ligera transparencia para que el nombre resalte más */
+  color: var(--verde-brillante);
+  text-transform: lowercase; 
+  opacity: 0.85; 
 }
 
-/* Círculo del Avatar */
 .usuario-avatar {
   width: 40px;
   height: 40px;
@@ -132,7 +126,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--verde-brillante); /* Fondo claro para resaltar las letras oscuras */
+  background-color: var(--verde-brillante); 
   color: var(--verde-oscuro);
   font-weight: 700;
   font-size: 14px;
@@ -145,29 +139,28 @@
   object-fit: cover;
 }
 
-/* --- CONTENEDOR DEL BLOQUE USUARIO + BOTÓN --- */
+
 .encabezado-usuario-bloque {
   display: flex;
-  flex-direction: row; /* Fuerza a que estén uno al lado del otro */
+  flex-direction: row; 
   align-items: center;
   gap: 15px;
 }
 
-/* Quitamos el subrayado y color azul por defecto de los Links de React */
+
 .encabezado-usuario-bloque a {
   text-decoration: none;
 }
 
-/* --- ESTILO DEL BOTÓN EDITAR PERFIL --- */
 .btn-editar-perfil {
-  background-color: rgb(193, 233, 182); /* Verde clarito */
-  color: rgb(54, 94, 58) !important; /* Forzamos el color verde oscuro */
+  background-color: rgb(193, 233, 182); 
+  color: rgb(54, 94, 58) !important; 
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 600;
-  text-decoration: none !important; /* Forzamos quitar el subrayado */
-  white-space: nowrap; /* Evita que "Editar" y "perfil" se pongan en dos líneas */
+  text-decoration: none !important; 
+  white-space: nowrap; 
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   display: flex;
@@ -180,62 +173,62 @@
 }
 
 /* ===================================================
-   AJUSTES PARA MÓVILES (Dentro de tu @media existente)
    =================================================== */
 @media (max-width: 768px) {
-  /* ... (Tus otras reglas de media query se quedan igual) ... */
+
 
   .encabezado-usuario {
-    margin-top: auto; /* Empuja el perfil del usuario abajo del todo en el menú móvil */
+    flex-direction: column;
+    margin-top: auto; 
     margin-bottom: 40px;
-    width: 80%; /* Hace que la píldora de usuario sea más ancha en móvil */
+    width: 80%; 
     justify-content: center;
     gap: 20px;
     padding: 10px 20px;
   }
 
   .usuario-info {
-    text-align: left; /* En móvil queda mejor alineado a la izquierda */
+    text-align: left; /
   }
 }
+
 a{
+  justify-items:center;
   text-decoration: none !important;
 }
-/* =========================================
-   DISEÑO RESPONSIVO (PANTALLAS < 768px)
-   ========================================= */
+
+
 @media (max-width: 768px) {
   .encabezado-container {
-    padding: 0 20px; /* Menos espacio en los bordes en móviles */
+    padding: 0 20px; 
   }
 
-  /* 1. Mostrar el botón hamburguesa */
   .menu-hamburguesa {
     display: block;
   }
 
-  /* 2. Convertir la barra de navegación en un panel lateral o desplegable */
+
   .encabezado-nav {
     position: absolute;
-    top: 80px; /* Justo debajo del header */
-    left: -100%; /* Oculto fuera de la pantalla por defecto */
+    top: 80px; 
+    left: -100%; 
     width: 100%;
-    height: calc(100vh - 80px); /* Ocupa el resto de la pantalla */
+    height: calc(100vh - 80px); 
     background-color: var(--verde-oscuro);
     flex-direction: column;
     justify-content: flex-start;
     padding-top: 40px;
     gap: 30px;
-    transition: left 0.4s ease-in-out; /* Animación de entrada suave */
+    transition: left 0.4s ease-in-out; 
     z-index: 999;
   }
 
-  /* 3. Clase dinámica: cuando el estado en React es 'true', el panel se desliza */
+
   .encabezado-nav.abierto {
     left: 0;
   }
 
-  /* 4. Ajustar los enlaces para móvil */
+
   .nav-links {
     flex-direction: column;
     align-items: center;

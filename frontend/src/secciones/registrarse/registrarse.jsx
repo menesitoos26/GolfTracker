@@ -21,7 +21,7 @@ function Registrarse() {
 
             if (response.ok) {
                 alert("¡Usuario registrado con éxito!");
-                navigate('/'); // Redirige automáticamente al Login
+                navigate('/');
             } else {
                 alert(data.detail || "Hubo un error en el registro");
             }
@@ -36,7 +36,7 @@ function Registrarse() {
                 <div>
                     REGISTRARSE
                 </div>
-                {/* Vinculamos la función al evento onSubmit */}
+
                 <form className='rigistroformulario' onSubmit={handleSubmit}>
                     <div className='inputsRegistro'>
                         <label htmlFor="name">Nombre</label>

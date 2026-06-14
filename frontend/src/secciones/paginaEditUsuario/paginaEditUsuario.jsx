@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // IMPORTANTE: Necesario para redireccionar
+import { useNavigate } from 'react-router-dom';
 import Encabezado from '../componentesSecciones/encabezado/encabezado';
 import './paginaEditUsuario.css';
 
 function PaginaEditUsuario() {
-    const navigate = useNavigate(); // Inicializamos el navegador
+    const navigate = useNavigate();
     const [datosFormulario, setDatosFormulario] = useState({
         name: '',
         email: '',
@@ -24,7 +24,7 @@ function PaginaEditUsuario() {
                 password: '' 
             });
         } else {
-            navigate('/login'); // Si no hay sesión, al login
+            navigate('/login'); 
         }
     }, [navigate]);
 
@@ -45,9 +45,9 @@ function PaginaEditUsuario() {
         }
 
         try {
-            // Hacemos la petición a la nueva ruta del backend
+
             const response = await fetch(`/api/usuarios/editar/${usuarioId}`, {
-                method: 'PUT', // Usamos PUT para actualizar datos
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -57,15 +57,14 @@ function PaginaEditUsuario() {
             const data = await response.json();
 
             if (response.ok) {
-                // 1. Actualizamos los datos en el localStorage para que el resto de la web se entere
                 const usuarioActual = JSON.parse(localStorage.getItem('usuarioGolfTracker'));
                 usuarioActual.name = data.name;
                 usuarioActual.email = data.email;
                 localStorage.setItem('usuarioGolfTracker', JSON.stringify(usuarioActual));
 
-                // 2. Avisamos y devolvemos al usuario a su perfil
+                
                 alert("¡Perfil actualizado con éxito!");
-                navigate('/paginaUsuario'); // Cambia esta ruta si tu perfil se llama de otra forma
+                navigate('/paginaUsuario'); 
             } else {
                 setMensaje(data.detail || "Error al actualizar el perfil.");
             }

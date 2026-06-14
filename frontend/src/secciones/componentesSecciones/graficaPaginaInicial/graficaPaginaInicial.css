@@ -1,4 +1,4 @@
-/* Contenedor principal de la tarjeta */
+
 .tarjeta-progreso {
     background-color: var(--verde-oscuro, rgb(45, 80, 50));
     border: 1px solid rgba(193, 233, 182, 0.35);
@@ -13,7 +13,6 @@
     box-shadow: var(--sombra-tarjeta, 0 10px 30px rgba(0,0,0,0.25));
 }
 
-/* --- Cabecera --- */
 .cabecera-progreso {
     color:rgb(193, 233, 182);
     display: flex;
@@ -39,7 +38,6 @@
     font-weight: bold;
     margin: 0;
 }
-
 
 .nuevaRonda> button{
     text-decoration: none;
@@ -67,14 +65,13 @@
     color:  rgb(21, 96, 30);
 }
 
-/* --- Gráfica --- */
 .contenedor-grafica {
-    height: 150px; /* Altura de la gráfica */
+    height: 150px; 
     width: 100%;
     margin-bottom: 30px;
 }
 
-/* --- Estadísticas Inferiores --- */
+
 .estadisticas-inferiores {
     display: flex;
     gap: 15px;

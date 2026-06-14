@@ -80,7 +80,6 @@ function PaginaUsuario() {
             <div className='usuarioSeccion'>
                 <div className="usuario-stats-grid">
                     
-                    {/* Recuadro 1: Hándicap */}
                     <div className="tarjeta-dato">
                         <div className="tarjeta-contenido">
                             <h3>Hándicap Actual</h3>
@@ -88,7 +87,6 @@ function PaginaUsuario() {
                         </div>
                     </div>
 
-                    {/* Recuadro 2: Rondas esta semana */}
                     <div className="tarjeta-dato">
                         <div className="tarjeta-contenido">
                             <h3>Rondas (Esta Semana)</h3>
@@ -96,7 +94,6 @@ function PaginaUsuario() {
                         </div>
                     </div>
 
-                    {/* Recuadro 3: Campos esta semana */}
                     <div className="tarjeta-dato">
                         <div className="tarjeta-contenido">
                             <h3>Campos (Esta Semana)</h3>

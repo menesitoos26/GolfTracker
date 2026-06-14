@@ -1,5 +1,4 @@
 import React from 'react';
-// IMPORTANTE: Hemos cambiado BarChart y Bar por LineChart y Line
 import { LineChart, Line, ResponsiveContainer, CartesianGrid, Tooltip, XAxis, YAxis, Legend } from 'recharts';
 import { Link } from 'react-router-dom';
 import './graficaPaginaInicial.css';

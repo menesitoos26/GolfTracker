@@ -23,8 +23,6 @@ function Login() {
 
             const data = await response.json();
 
-            // PONEMOS DOBLE SEGURIDAD: 
-            // Solo si la respuesta es correcta (status 200) Y además el servidor envió al 'usuario'
             if (response.ok && data.usuario) {
                 alert(`¡Bienvenido de nuevo, ${data.usuario.name}!`);
                 navigate("/paginaInicial");
@@ -71,7 +69,6 @@ function Login() {
                         />
                     </div>
 
-                    {/* El mensaje de error ahora aparecerá limpio en pantalla sin tumbar la app */}
                     {error && <p style={{ color: 'red', marginTop: '10px', fontSize: '14px', fontWeight: 'bold' }}>{error}</p>}
                 </form>
 

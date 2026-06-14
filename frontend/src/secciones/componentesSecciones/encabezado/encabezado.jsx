@@ -4,13 +4,10 @@ import './encabezado.css'
 
 function Encabezado() {
   const [menuAbierto, setMenuAbierto] = useState(false);
-
-  // 1. Iniciamos el usuario en null por defecto
   const [usuarioLogueado, setUsuarioLogueado] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 2. AÑADIMOS ESTE useEffect: Se ejecuta automáticamente al cargar el encabezado
   useEffect(() => {
     // Intentamos obtener el usuario del localStorage
     const guardado = localStorage.getItem('usuarioGolfTracker');
@@ -19,7 +16,7 @@ function Encabezado() {
     }
   }, []);
 
-  // 3. Añadimos una función para cerrar sesión (borrar la memoria)
+  // función para cerrar sesión (borrar la memoria)
   const cerrarSesion = () => {
     localStorage.removeItem('usuarioGolfTracker'); // Borramos datos
     setUsuarioLogueado(null); // Limpiamos la vista
@@ -27,27 +24,37 @@ function Encabezado() {
     navigate('/'); // Lo mandamos al login
   };
 
-  const obtenerIniciales = (nombreCompleto) => {
-    if (!nombreCompleto) return "";
-    return nombreCompleto
-      .split(" ")
-      .map(palabra => palabra[0])
-      .join("")
-      .toUpperCase();
+  const obtenerIniciales = (nombre) => {
+    // si el nombre no existe o no es texto, devolvemos un carácter vacío o "?"
+    if (!nombre || typeof nombre !== 'string') return "?";
+
+    // Quitamos espacios en blanco extremos y dividimos el nombre por CUALQUIER espacio intermedio
+    const palabras = nombre.trim().split(/\s+/);
+
+  
+    if (palabras.length === 1) {
+      return palabras[0].charAt(0).toUpperCase();
+    }
+    // Tomamos la inicial de la primera palabra y la inicial de la SEGUNDA palabra
+    const primeraInicial = palabras[0].charAt(0);
+    const segundaInicial = palabras[1].charAt(0);
+
+    return (primeraInicial + segundaInicial).toUpperCase();
   };
 
   const toggleMenu = () => {
     setMenuAbierto(!menuAbierto);
   };
+
   return (
     <header className="encabezado-container">
-      {/* Logotipo */}
+
       <div className="encabezado-logo">
         <img src="/logo.png" alt="Logo GolfTracker" />
         <Link to="/paginaInicial"> GolfTracker</Link>
       </div>
 
-      {/* Botón Hamburguesa (Móviles) */}
+
       <button className="menu-hamburguesa" onClick={toggleMenu}>
         {menuAbierto ? '✖' : '☰'}
       </button>
@@ -61,8 +68,6 @@ function Encabezado() {
           <li><Link to="/nuevaRonda" onClick={() => setMenuAbierto(false)}>Nueva Rondas</Link></li>
         </ul>
 
-        {/* RENDIMIENTO CONDICIONAL REAL */}
-        {/* --- Cambia esta parte del renderizado --- */}
         {usuarioLogueado ? (
           // SI EXISTE EL USUARIO, pintamos la información
           <div className="encabezado-usuario-bloque">
@@ -92,7 +97,7 @@ function Encabezado() {
             </button>
           </div>
         ) : (
-          // SI NO EXISTE (es null), mostramos un botón de acceso o simplemente nada
+          
           <div className="nav-botones">
             <Link to="/" className="btn-iniciar-sesion">Iniciar Sesión</Link>
           </div>

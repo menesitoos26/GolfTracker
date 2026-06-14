@@ -1,28 +1,25 @@
 
-/* --- CONTENEDOR PRINCIPAL DE LA SECCIÓN --- */
 .usuarioSeccion {
     box-sizing: border-box;
     width: 100%;
-    min-height: calc(100vh - 80px); /* Resta la altura del encabezado */
+    min-height: calc(100vh - 80px);
     padding: 60px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
-    z-index: 10; /* Asegura que se pinte por encima del fondo absoluto */
+    z-index: 10; 
 }
 
-/* --- CUADRÍCULA DE LOS RECUADROS --- */
 .usuario-stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 150px); /* 3 columnas de 150px según tu mockup */
-    gap: 25px; /* Separación entre tarjetas */
+    grid-template-columns: repeat(3, 150px); 
+    gap: 25px; 
     max-width: 1200px;
     width: 100%;
     justify-content: center;
 }
 
-/* --- ESTILO DE CADA RECUADRO DE DATOS --- */
 .tarjeta-dato {
     background-color: var(--verde-medio, rgb(54, 94, 58));
     border: 2px solid var(--verde-brillante, rgb(193, 233, 182));
@@ -37,13 +34,11 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Efecto sutil al pasar el cursor */
 .tarjeta-dato:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 30px rgba(193, 233, 182, 0.2);
 }
 
-/* Icono decorativo del recuadro */
 .tarjeta-icono {
     font-size: 28px;
     margin-bottom: 10px;
@@ -53,7 +48,7 @@
     margin: 0;
     font-size: 13px;
     font-weight: 500;
-    color: rgb(193, 233, 182); /* Letras secundarias en verde clarito */
+    color: rgb(193, 233, 182); 
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -62,42 +57,36 @@
     margin: 8px 0 0 0;
     font-size: 26px;
     font-weight: 700;
-    color: #ffffff; /* El número grande destaca en blanco */
+    color: #ffffff; 
 }
 
-/* --- FONDO ABSOLUTO (Mantenemos tu clase original impecable) --- */
 .FondoUsuarioSeccion {
     background-image: image-set(
         url("/fondoUser.jpg") 
     );
-    position: fixed; /* Cambiamos a absolute para que se adapte al contenedor de las animaciones */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
-    
-    /* CAMBIO CLAVE: Obligamos a que mida el 100% del alto total que alcance la tabla */
     height: 100%;
     min-height: 100vh; 
-    
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     z-index: -100;
 }
-/* --- DISEÑO RESPONSIVO (MÓVILES) --- */
 @media (max-width: 768px) {
     .usuarioSeccion {
         padding-top: 40px;
     }
     
     .usuario-stats-grid {
-        grid-template-columns: 1fr; /* En pantallas pequeñas se pone un recuadro debajo de otro */
-        max-width: 300px;
+        grid-template-columns: 1fr;
         gap: 15px;
     }
     
     .tarjeta-dato {
-        flex-direction: row; /* Se vuelve horizontal en el móvil para que ocupe menos espacio vertical */
+        flex-direction: row; 
         justify-content: flex-start;
         gap: 20px;
         padding: 15px 20px;

@@ -8,9 +8,21 @@ function NuevaRonda() {
   const navigate = useNavigate();
 
   // Estados para la API
+  // guardar campos
   const [campos, setCampos] = useState([]);
+  // guradar campo que seleccionas en el listado
   const [campoSeleccionado, setCampoSeleccionado] = useState(null);
+  // En caso que la api se tarde en cargar
   const [cargando, setCargando] = useState(true);
+  // Donde se guardan los hoyos
+  // Lista con 10 hoyos por defecto
+  const [hoyos, setHoyos] = useState(
+    Array.from({ length: 10 }, (_, i) => ({
+      numero: i + 1,
+      par: 4,
+      golpes: ''
+    }))
+  );
 
   // Cargar campos al iniciar y limpiarlos
   useEffect(() => {
@@ -23,7 +35,7 @@ function NuevaRonda() {
   cargarDatos();
 }, []);
 
-  // Manejar selección de campo a través del índice del array
+  // Esto se encarga de darnos el nombre del campo que seleccionamos
   const manejarSeleccion = (e) => {
     const indexSeleccionado = e.target.value;
     const campoEncontrado = campos[indexSeleccionado];
@@ -32,15 +44,8 @@ function NuevaRonda() {
 
   const fechaActual = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
-  // Lista con 10 hoyos por defecto
-  const [hoyos, setHoyos] = useState(
-    Array.from({ length: 10 }, (_, i) => ({
-      numero: i + 1,
-      par: 4,
-      golpes: ''
-    }))
-  );
 
+  // funcion que al darle guardar del for guarde los datos
   const handleInputChange = (index, campo, valor) => {
     const nuevosHoyos = [...hoyos];
     nuevosHoyos[index][campo] = valor === '' ? '' : parseInt(valor, 10);
@@ -48,6 +53,8 @@ function NuevaRonda() {
   };
 
   // Cálculos automáticos
+  // la h es el array de hoyos
+  // el cero del final es para que sea numero base del autoincremental que es reduce
   const totalPar = hoyos.reduce((acc, h) => acc + (h.par || 0), 0);
   const totalGolpes = hoyos.reduce((acc, h) => acc + (h.golpes || 0), 0);
   const hoyosJugados = hoyos.filter(h => h.golpes !== '').length;
@@ -73,15 +80,14 @@ function NuevaRonda() {
     }
   };
 
-  // --- NUEVA FUNCIÓN: ENVIAR A LA BASE DE DATOS ---
   const guardarRonda = async (e) => {
     e.preventDefault();
 
-    // 1. VALIDACIÓN: Bloqueamos si hay hoyos sin golpes o en 0
+
     const hoyosIncompletos = hoyos.some(hoyo => hoyo.golpes === '' || hoyo.golpes <= 0);
     
     if (hoyosIncompletos) {
-        alert("⚠️ Por favor, introduce la cantidad de golpes en todos los hoyos. No puedes dejarlos vacíos ni en cero.");
+        alert("Por favor, introduce la cantidad de golpes en todos los hoyos. No puedes dejarlos vacíos ni en cero.");
         return; // Detiene la ejecución aquí
     }
 
@@ -123,7 +129,6 @@ function NuevaRonda() {
         const data = await response.json();
 
         if (response.ok) {
-            // ACTUALIZAMOS LA MEMORIA CON EL NUEVO HÁNDICAP EN VIVO
             if (data.nuevo_handicap !== undefined) {
                 usuario.handicap = data.nuevo_handicap;
                 localStorage.setItem('usuarioGolfTracker', JSON.stringify(usuario));
@@ -146,8 +151,6 @@ function NuevaRonda() {
 
       <div className="nueva-ronda-seccion">
         <div className="ronda-contenedor">
-
-          {/* CABECERA DINÁMICA */}
           <div className="ronda-header dinamico">
             <div className="info-titulo">
               <h2 className="titulo-truncado" title={campoSeleccionado ? campoSeleccionado.club_name : 'Nueva Ronda de Golf'}>
@@ -162,7 +165,6 @@ function NuevaRonda() {
                 <p className="subtitulo-ubicacion">{fechaActual}</p>
               )}
             </div>
-
             <div className="controles-derecha">
               <select
                 className="selector-campo"
@@ -181,8 +183,6 @@ function NuevaRonda() {
               </select>
             </div>
           </div>
-
-          {/* MARCADOR EN TIEMPO REAL */}
           <div className="marcador-resumen">
             <div className="marcador-item">
               <span>Par Total</span>
@@ -237,7 +237,7 @@ function NuevaRonda() {
                             required /* DOBLE SEGURIDAD: Evita el envío si el campo está vacío */
                           />
                         </td>
-                        <td className={`diff-col ${diffHoyo > 0 ? 'text-rojo' : diffHoyo < 0 ? 'text-azul' : ''}`}>
+                        <td className={`diff-col ${diffHoyo > 0 ? 'text-rojo' : diffHoyo < 0 ? 'text-verde' : ''}`}>
                           {diffHoyo > 0 ? `+${diffHoyo}` : diffHoyo}
                         </td>
                       </tr>

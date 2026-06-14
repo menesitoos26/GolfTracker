@@ -93,7 +93,6 @@ function PaginaEditarPerfil() {
                 </div>
             </div>
 
-            {/* Reutilizamos tu fondo de usuario para mantener coherencia visual */}
             <div className='FondoUsuarioSeccion'></div> 
         </>
     );

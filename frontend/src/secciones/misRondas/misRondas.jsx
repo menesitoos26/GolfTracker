@@ -58,20 +58,16 @@ function MisRondas() {
                                 <tr>
                                     <th className="th-rondas text-left">Campo</th>
                                     <th className="th-rondas">Fecha</th>
-                                    <th className="th-rondas">Par Campo</th> {/* CAMBIADO: Nueva cabecera */}
-                                    <th className="th-rondas">Tus Golpes</th> {/* CAMBIADO: Nombre más claro */}
+                                    <th className="th-rondas">Par Campo</th> 
+                                    <th className="th-rondas">Tus Golpes</th> 
                                     <th className="th-rondas">+/- Par</th>
                                     {/* CAMBIADO: Se elimina la cabecera de Putts */}
                                 </tr>
                             </thead>
                             <tbody>
                                 {rondas.map((ronda) => {
-                                    // Extraemos el par del campo de forma segura (por si acaso viene vacío)
                                     const parCampo = ronda.course?.total_par || 0;
-                                    // Calculamos la diferencia (+/- par)
                                     const diferencia = ronda.total_strokes - parCampo;
-                                    
-                                    // Formateamos el texto del más/menos par
                                     const plusMinusTexto = diferencia > 0 ? `+${diferencia}` : diferencia === 0 ? "E" : diferencia;
 
                                     return (
@@ -81,13 +77,11 @@ function MisRondas() {
                                             </td>
                                             <td className="td-rondas text-muted">{ronda.date}</td>
                                             
-                                            {/* CAMBIADO: Añadimos la celda con el Par total necesario del campo */}
                                             <td className="td-rondas text-muted">{parCampo}</td>
                                             
                                             <td className="td-rondas text-bold">{ronda.total_strokes}</td>
                                             <td className="par-destacado td-rondas">{plusMinusTexto}</td>
                                             
-                                            {/* CAMBIADO: Se elimina la celda de Putts */}
                                         </tr>
                                     );
                                 })}

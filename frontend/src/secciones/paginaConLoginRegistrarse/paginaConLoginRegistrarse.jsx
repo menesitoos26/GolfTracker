@@ -13,10 +13,10 @@ function PageTransition({ children }) {
   return (
     <motion.div
       className="page-transition"
-      initial={{ opacity: 0 }} /* ACÁ: Cambiar de 1 a 0 para que empiece transparente */
+      initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }} /* 0.7s puede sentirse un poco largo, 0.5s suele ser más fluido */
+      transition={{ duration: 0.5 }} 
     >
       {children}
     </motion.div>

@@ -43,7 +43,7 @@
 }
 
 .contenedor-tabla {
-    overflow-x: auto; /* Scroll horizontal si se encoge en móviles */
+    overflow-x: auto; 
 }
 
 .tabla-rondas {
@@ -76,7 +76,7 @@
     background-color: rgba(255, 255, 255, 0.04);
 }
 
-/* Clases de utilidad para alinear y dar color */
+
 .text-left {
     text-align: left;
 }
@@ -90,7 +90,7 @@
 }
 
 .par-destacado {
-    color: #C1E9B2; /* El verde de tu diseño */
+    color: #C1E9B2; 
     font-weight: bold;
 }
 

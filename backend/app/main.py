@@ -177,7 +177,7 @@ def obtener_rondas_usuario(user_id: int, db: Session = Depends(get_db)):
 @app.post("/guardar-ronda")
 def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
     try:
-        # 1. Comprobamos si ya existe el campo con el mismo NOMBRE y mismo PAR TOTAL
+        # Comprobamos si ya existe el campo con el mismo NOMBRE y mismo PAR TOTAL
         query_course = text("""
             SELECT id FROM courses 
             WHERE name = :name AND total_par = :total_par 
@@ -189,8 +189,7 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
         }).fetchone()
 
         if course_record:
-            # ¡SÚPER LIMPIO! Si el campo ya existe con esa configuración, solo obtenemos su ID.
-            # No actualizamos nada del campo ni de sus hoyos. Protegemos el historial.
+            #  Si el campo ya existe con esa configuración, solo obtenemos su ID.
             course_id = course_record._mapping["id"]
         else:
             # Si el campo no existe (o tiene un par total diferente), lo creamos de cero con sus hoyos
@@ -217,10 +216,10 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
                     "par": h.par
                 })
 
-        # 2. CREAR LA RONDA
+        # CREAR LA RONDA
         insert_round = text("""
             INSERT INTO rounds (user_id, course_id, date, total_strokes, notes)
-            VALUES (:user_id, :course_id, :date, :total_strokes, 'Ronda guardada desde la app')
+            VALUES (:user_id, :course_id, :date, :total_strokes, 'Ronda guardada desde la web')
         """)
         db.execute(insert_round, {
             "user_id": payload.user_id,
@@ -230,7 +229,7 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
         })
         round_id = db.execute(text("SELECT LAST_INSERT_ID()")).scalar()
 
-        # 3. GUARDAR LOS GOLPES HOYO POR HOYO
+        # GUARDAR LOS GOLPES HOYO POR HOYO
         insert_score = text("""
             INSERT INTO hole_scores (round_id, hole_id, strokes)
             VALUES (
@@ -248,7 +247,7 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
                     "strokes": h.golpes
                 })
 
-        # 4. RECALCULAR HÁNDICAP
+        # RECALCULAR HÁNDICAP
         query_recalculo = text("""
             SELECT AVG(r.total_strokes - c.total_par) as nuevo_handicap
             FROM rounds r
@@ -278,12 +277,6 @@ def guardar_ronda(payload: GuardarRondaPayload, db: Session = Depends(get_db)):
 def obtener_detalle_ultima_ronda(user_id: int, db: Session = Depends(get_db)):
 
     try:
-        # 1. Buscamos el ID de la última ronda real que registró este usuario
-        query_ronda = text("""
-            SELECT id FROM rounds 
-            WHERE user_id = :user_id 
-            ORDER BY date DESC, r.id DESC LIMIT 1
-        """)
         # Nota: Si da error por la 'r.id' de tu estructura anterior, déjalo como 'id DESC'
         query_ronda = text("""
             SELECT id FROM rounds 
@@ -297,7 +290,7 @@ def obtener_detalle_ultima_ronda(user_id: int, db: Session = Depends(get_db)):
             
         round_id = ronda._mapping["id"]
         
-        # 2. Traemos SOLO los hoyos jugados en ESA ronda específica cruzados con sus golpes reales
+        # Traemos SOLO los hoyos jugados en ESA ronda específica cruzados con sus golpes reales
         query_detalles = text("""
             SELECT h.hole_number, h.par, hs.strokes AS golpes
             FROM hole_scores hs
@@ -325,14 +318,14 @@ def obtener_detalle_ultima_ronda(user_id: int, db: Session = Depends(get_db)):
 @app.put("/usuarios/editar/{user_id}")
 def editar_usuario(user_id: int, datos: EditarUsuario, db: Session = Depends(get_db)):
     try:
-        # 1. Comprobamos si el nuevo correo ya lo está usando otra persona (que no sea él mismo)
+        # Comprobamos si el nuevo correo ya lo está usando otra persona (que no sea él mismo)
         query_email = text("SELECT id FROM users WHERE email = :email AND id != :user_id")
         email_ocupado = db.execute(query_email, {"email": datos.email, "user_id": user_id}).fetchone()
         
         if email_ocupado:
             raise HTTPException(status_code=400, detail="Ese correo ya está registrado por otra persona.")
 
-        # 2. Comprobamos si el usuario escribió una nueva contraseña
+        # Comprobamos si el usuario escribió una nueva contraseña
         if datos.password and len(datos.password.strip()) > 0:
             # Encriptamos la nueva contraseña
             salt = bcrypt.gensalt()
