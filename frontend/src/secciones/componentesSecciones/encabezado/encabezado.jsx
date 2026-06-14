@@ -69,7 +69,6 @@ function Encabezado() {
         </ul>
 
         {usuarioLogueado ? (
-          // SI EXISTE EL USUARIO, pintamos la información
           <div className="encabezado-usuario-bloque">
             <Link to="/paginaUsuario" onClick={() => setMenuAbierto(false)}>
               <div className="encabezado-usuario">
@@ -79,7 +78,6 @@ function Encabezado() {
                 </div>
                 <div className="usuario-avatar">
                   <div className="avatar-iniciales">
-                    {/* Asegúrate de tener la función obtenerIniciales definida */}
                     {obtenerIniciales(usuarioLogueado.name)}
                   </div>
                 </div>
