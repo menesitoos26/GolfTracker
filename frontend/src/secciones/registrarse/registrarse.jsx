@@ -68,8 +68,8 @@ function Registrarse() {
                     </div>
                     <div className='btRegistrar'>
                         <button className='botonRegistro' type="submit">Registrarse</button>
-                    <Link to="/">
-                        <button className='botonRegistro' type="button">Logearse</button> 
+                    <Link to="/login">
+                        <button className='botonRegistro' type="button">Logearse</button>
                     </Link>
                     </div>
                     

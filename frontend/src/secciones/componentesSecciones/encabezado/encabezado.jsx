@@ -51,7 +51,7 @@ function Encabezado() {
 
       <div className="encabezado-logo">
         <img src="/logo.png" alt="Logo GolfTracker" />
-        <Link to="/paginaInicial"> GolfTracker</Link>
+        <Link to={usuarioLogueado ? "/paginaInicial" : "/"}> GolfTracker</Link>
       </div>
 
 
@@ -95,9 +95,10 @@ function Encabezado() {
             </button>
           </div>
         ) : (
-          
+
           <div className="nav-botones">
-            <Link to="/" className="btn-iniciar-sesion">Iniciar Sesión</Link>
+            <Link to="/registrarse" className="btn-registrarse" onClick={() => setMenuAbierto(false)}>Registrarse</Link>
+            <Link to="/login" className="btn-iniciar-sesion" onClick={() => setMenuAbierto(false)}>Iniciar Sesión</Link>
           </div>
         )}
       </nav>
