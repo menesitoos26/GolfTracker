@@ -134,17 +134,6 @@ git clone https://github.com/menesitoos26/GolfTracker.git
 cd GolfTracker
 ```
 
-Crear un archivo `.env` en la raíz con las variables de entorno:
-
-```env
-GOLF_COURSE_API_KEY=tu_api_key
-DB_HOST=db
-DB_PORT=3306
-DB_USER=golf_user
-DB_PASSWORD=golf_pass
-DB_NAME=golf_db
-JWT_SECRET=una_clave_larga_y_aleatoria
-```
 
 > ⚠️ El archivo `.env` contiene información sensible y **no se incluye en el repositorio** por seguridad.
 

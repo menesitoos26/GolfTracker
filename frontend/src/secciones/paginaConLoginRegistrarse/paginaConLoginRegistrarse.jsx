@@ -6,6 +6,7 @@ import PaginaUsuario from '../paginaUsuario/paginaUsuario'
 import NuevaRonda from '../nuevaRonda/nuevaRonda'
 import MisRondas from '../misRondas/misRondas'
 import PaginaEditUsuario from '../paginaEditUsuario/paginaEditUsuario'
+import PaginaPublica from '../paginaPublica/paginaPublica'
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -36,6 +37,12 @@ function PaginaLR() {
         >
           <Route
             path="/"
+            element={
+              <PaginaPublica />
+            }
+          />
+          <Route
+            path="/login"
             element={
               <PageTransition>
                 <Login />
@@ -87,7 +94,7 @@ function PaginaLR() {
         </Routes>
       </AnimatePresence>
     </>
-  )
+  );
 }
 
 export default PaginaLR;

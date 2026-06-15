@@ -62,19 +62,43 @@
   color: var(--verde-brillante);
 }
 
-.btn-inicio-sesion {
+.nav-botones {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-inicio-sesion,
+.btn-iniciar-sesion {
   text-decoration: none;
   border: 1.5px solid var(--blanco-crema);
   padding: 8px 24px;
-  border-radius: 25px;
+  border-radius: var(--radio-pill, 25px);
   color: var(--blanco-crema);
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.btn-inicio-sesion:hover {
+.btn-inicio-sesion:hover,
+.btn-iniciar-sesion:hover {
   background-color: var(--blanco-crema);
-  color: var(--verde-header); 
+  color: var(--verde-header);
+}
+
+.btn-registrarse {
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  padding: 8px 24px;
+  border-radius: var(--radio-pill, 25px);
+  background-color: var(--verde-brillante);
+  color: var(--verde-oscuro);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-registrarse:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
 }
 
 .menu-hamburguesa {
@@ -241,8 +265,15 @@ a{
     font-size: 20px;
   }
 
-  .btn-inicio-sesion {
+  .btn-inicio-sesion,
+  .btn-iniciar-sesion,
+  .btn-registrarse {
     font-size: 18px;
     padding: 12px 40px;
+  }
+
+  .nav-botones {
+    flex-direction: column;
+    gap: 20px;
   }
 }

@@ -1,0 +1,277 @@
+.publica-pagina {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--blanco-crema, #F4F7F2);
+    color: var(--verde-oscuro, rgb(45, 80, 50));
+    overflow-x: hidden;
+}
+
+/* --- HERO --- */
+.publica-hero {
+    width: 100%;
+    min-height: 65vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(rgba(35, 65, 40, 0.72), rgba(45, 80, 50, 0.78)), url('/imagen1.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 100px 20px;
+    box-sizing: border-box;
+}
+
+.publica-hero-contenido {
+    max-width: 720px;
+    color: var(--blanco-crema, #F4F7F2);
+}
+
+.publica-kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--verde-brillante, rgb(193, 233, 182));
+    margin-bottom: 14px;
+}
+
+.publica-hero-contenido h1 {
+    font-family: var(--fuente-titulos, sans-serif);
+    font-size: 46px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 18px;
+}
+
+.publica-hero-contenido p {
+    font-size: 17px;
+    line-height: 1.6;
+    color: rgba(244, 247, 242, 0.9);
+    margin: 0 auto 32px;
+    max-width: 560px;
+}
+
+.publica-hero-botones {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* --- BOTONES COMUNES --- */
+.btn-publica {
+    text-decoration: none;
+    padding: 13px 30px;
+    border-radius: var(--radio-pill, 999px);
+    font-weight: 700;
+    font-size: 15px;
+    transition: all 0.25s ease;
+    display: inline-block;
+}
+
+.btn-publica-primario {
+    background-color: var(--verde-brillante, rgb(193, 233, 182));
+    color: var(--verde-oscuro, rgb(45, 80, 50));
+    box-shadow: var(--sombra-suave, 0 4px 14px rgba(0,0,0,0.2));
+}
+
+.btn-publica-primario:hover {
+    background-color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.btn-publica-secundario {
+    border: 2px solid var(--blanco-crema, #F4F7F2);
+    color: var(--blanco-crema, #F4F7F2);
+    background: transparent;
+}
+
+.btn-publica-secundario:hover {
+    background-color: rgba(244, 247, 242, 0.12);
+    transform: translateY(-2px);
+}
+
+/* --- SECCIONES GENERALES --- */
+.publica-seccion {
+    padding: 70px 20px;
+    text-align: center;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.publica-seccion-alterna {
+    background-color: rgba(193, 233, 182, 0.25);
+    max-width: 100%;
+    border-radius: 0;
+}
+
+.publica-titulo-seccion {
+    font-family: var(--fuente-titulos, sans-serif);
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--verde-header, rgb(65, 105, 70));
+    margin-bottom: 12px;
+}
+
+.publica-subtitulo-seccion {
+    font-size: 15px;
+    color: rgb(54, 94, 58);
+    max-width: 540px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+}
+
+/* --- GRID CARACTERÍSTICAS --- */
+.publica-grid-caracteristicas {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.publica-tarjeta {
+    background-color: #ffffff;
+    border: 1px solid rgba(65, 105, 70, 0.12);
+    border-radius: var(--radio-lg, 16px);
+    padding: 28px 20px;
+    text-align: left;
+    box-shadow: var(--sombra-suave, 0 4px 14px rgba(0,0,0,0.06));
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.publica-tarjeta:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sombra-tarjeta, 0 10px 24px rgba(0,0,0,0.12));
+}
+
+.publica-icono {
+    font-size: 28px;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.publica-tarjeta h3 {
+    font-family: var(--fuente-titulos, sans-serif);
+    font-size: 17px;
+    margin-bottom: 8px;
+    color: var(--verde-header, rgb(65, 105, 70));
+}
+
+.publica-tarjeta p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #4a5b4c;
+    margin: 0;
+}
+
+/* --- PASOS --- */
+.publica-pasos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.publica-paso {
+    text-align: center;
+}
+
+.publica-paso-numero {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--verde-header, rgb(65, 105, 70));
+    color: var(--blanco-crema, #F4F7F2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--fuente-titulos, sans-serif);
+    font-weight: 800;
+    font-size: 20px;
+    margin: 0 auto 16px;
+}
+
+.publica-paso h3 {
+    font-family: var(--fuente-titulos, sans-serif);
+    font-size: 17px;
+    margin-bottom: 8px;
+    color: var(--verde-header, rgb(65, 105, 70));
+}
+
+.publica-paso p {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #4a5b4c;
+    margin: 0;
+}
+
+/* --- CTA FINAL --- */
+.publica-cta {
+    text-align: center;
+    padding: 70px 20px;
+    background-color: var(--verde-oscuro, rgb(45, 80, 50));
+    color: var(--blanco-crema, #F4F7F2);
+}
+
+.publica-cta h2 {
+    font-family: var(--fuente-titulos, sans-serif);
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.publica-cta p {
+    margin: 0 0 26px;
+    color: rgba(244, 247, 242, 0.85);
+}
+
+/* --- FOOTER --- */
+.publica-footer {
+    text-align: center;
+    padding: 22px 20px;
+    background-color: var(--verde-profundo, rgb(35, 65, 40));
+    color: rgba(244, 247, 242, 0.7);
+    font-size: 13px;
+}
+
+.publica-footer p {
+    margin: 0;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+    .publica-grid-caracteristicas {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .publica-pasos {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    .publica-hero-contenido h1 {
+        font-size: 32px;
+    }
+
+    .publica-hero {
+        padding: 70px 16px;
+    }
+
+    .publica-grid-caracteristicas {
+        grid-template-columns: 1fr;
+    }
+
+    .publica-hero-botones {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-publica {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+    }
+}
