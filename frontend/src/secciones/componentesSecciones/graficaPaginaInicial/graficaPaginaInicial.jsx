@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import { LineChart, Line, ResponsiveContainer, CartesianGrid, Tooltip, XAxis, YAxis, Legend } from 'recharts';
 import { Link } from 'react-router-dom';
 import './graficaPaginaInicial.css';
@@ -29,9 +29,9 @@ function GraficaPaginaInicial({ datos, handicapActual, nombreUser }) {
 
   // Aseguranos que si los datos entren mal que los pongan en cero en la array de datos
   const datosProcesados = datos.map((d) => ({
-    hoyo: d.hole_number || 0,
+    hoyo: d.hole_number || d.numero || 0,
     parNecesario: d.par || 0,
-    tusGolpes: d.strokes || 0
+    tusGolpes: d.golpes || d.strokes || 0
   }));
 
   // --- METRICAS BASADAS SÓLO EN LO JUGADO ---
