@@ -1,17 +1,55 @@
-import { useState } from 'react'
-import PaginaLR from './secciones/paginaConLoginRegistrarse/paginaConLoginRegistrarse'
-import './index.css'
-import './App.css'
+import { Outlet, Route, Routes } from 'react-router-dom'
+import Encabezado from './componentes/Encabezado'
+import { RutaProtegida, RutaSoloInvitados } from './componentes/RutaProtegida'
+import DetalleRonda from './paginas/DetalleRonda'
+import DetalleTorneo from './paginas/DetalleTorneo'
+import Estadisticas from './paginas/Estadisticas'
+import Landing from './paginas/Landing'
+import Login from './paginas/Login'
+import MisRondas from './paginas/MisRondas'
+import NoEncontrada from './paginas/NoEncontrada'
+import NuevaRonda from './paginas/NuevaRonda'
+import Panel from './paginas/Panel'
+import Perfil from './paginas/Perfil'
+import Registro from './paginas/Registro'
+import Torneos from './paginas/Torneos'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+/** Estructura común de las pantallas internas: encabezado + contenido. */
+function Layout() {
   return (
     <>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=golf_course" />
-      <PaginaLR />
+      <Encabezado />
+      <main>
+        <Outlet />
+      </main>
     </>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Landing />} />
+
+        <Route element={<RutaSoloInvitados />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/registro" element={<Registro />} />
+        </Route>
+
+        <Route element={<RutaProtegida />}>
+          <Route path="/panel" element={<Panel />} />
+          <Route path="/rondas" element={<MisRondas />} />
+          <Route path="/rondas/nueva" element={<NuevaRonda />} />
+          <Route path="/rondas/:id" element={<DetalleRonda />} />
+          <Route path="/torneos" element={<Torneos />} />
+          <Route path="/torneos/:id" element={<DetalleTorneo />} />
+          <Route path="/estadisticas" element={<Estadisticas />} />
+          <Route path="/perfil" element={<Perfil />} />
+        </Route>
+
+        <Route path="*" element={<NoEncontrada />} />
+      </Route>
+    </Routes>
+  )
+}

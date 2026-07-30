@@ -1,0 +1,46 @@
+.celda-numero-hoyo {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--texto-claro);
+  font-weight: 800;
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.tabla tfoot td,
+.tabla tfoot th {
+  background-color: rgba(255, 255, 255, 0.05);
+  font-weight: 700;
+  color: var(--texto-claro);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 12px;
+  text-align: center;
+}
+
+.tabla tfoot .fila-total td,
+.tabla tfoot .fila-total th {
+  background-color: var(--verde-medio);
+  font-size: 15px;
+}
+
+.detalle-selector-torneo {
+  width: 100%;
+  margin-top: 2px;
+  padding: 9px 12px;
+  border-radius: var(--radio-sm);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background-color: rgba(0, 0, 0, 0.22);
+  color: var(--texto-claro);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.detalle-selector-torneo:focus {
+  outline: none;
+  border-color: var(--verde-suave);
+  box-shadow: 0 0 0 3px rgba(96, 166, 103, 0.28);
+}
+
+.detalle-selector-torneo option {
+  background-color: var(--verde-profundo);
+}

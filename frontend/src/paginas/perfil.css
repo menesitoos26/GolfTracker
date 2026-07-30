@@ -1,0 +1,39 @@
+.perfil-resumen {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radio-md);
+  padding: 22px;
+}
+
+.perfil-avatar {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--verde-brillante);
+  color: var(--verde-profundo);
+  font-family: var(--fuente-titulos);
+  font-size: 23px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.perfil-resumen h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--texto-claro);
+  margin: 0 0 3px;
+}
+
+.perfil-resumen p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.perfil-formulario {
+  max-width: 720px;
+}

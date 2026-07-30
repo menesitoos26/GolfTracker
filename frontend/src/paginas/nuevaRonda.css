@@ -1,0 +1,100 @@
+.marcador {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radio-md);
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.marcador-dato {
+  background-color: var(--verde-profundo);
+  padding: 18px;
+  text-align: center;
+}
+
+.marcador-dato span {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--texto-tenue);
+  margin-bottom: 6px;
+}
+
+.marcador-dato strong {
+  font-family: var(--fuente-titulos);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--texto-claro);
+}
+
+.tarjeta-encabezado {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.tabla-tarjeta {
+  min-width: 460px;
+}
+
+.tabla-tarjeta .celda-hoyo {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--texto-claro);
+  font-weight: 800;
+  width: 62px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tabla-tarjeta input[type='number'],
+.tabla-tarjeta select {
+  width: 72px;
+  padding: 7px 8px;
+  text-align: center;
+  border-radius: var(--radio-sm);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background-color: rgba(0, 0, 0, 0.25);
+  color: var(--texto-claro);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.tabla-tarjeta input[type='number']:focus,
+.tabla-tarjeta select:focus {
+  outline: none;
+  border-color: var(--verde-suave);
+  box-shadow: 0 0 0 3px rgba(96, 166, 103, 0.28);
+}
+
+.tabla-tarjeta select option {
+  background-color: var(--verde-profundo);
+}
+
+.casilla {
+  width: 19px;
+  height: 19px;
+  accent-color: var(--verde-suave);
+  cursor: pointer;
+}
+
+.casilla:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Quitamos las flechitas del input numérico: molestan al teclear rápido. */
+.tabla-tarjeta input[type='number']::-webkit-outer-spin-button,
+.tabla-tarjeta input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.tabla-tarjeta input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

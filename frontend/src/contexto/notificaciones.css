@@ -1,0 +1,65 @@
+.avisos-contenedor {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: min(360px, calc(100vw - 40px));
+}
+
+.aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 16px;
+  border-radius: var(--radio-md);
+  background-color: #ffffff;
+  color: var(--verde-profundo);
+  box-shadow: var(--sombra-tarjeta);
+  border-left: 4px solid var(--verde-suave);
+  font-size: 14px;
+  line-height: 1.45;
+  animation: aviso-entrada 0.25s ease-out;
+}
+
+.aviso-exito {
+  border-left-color: #16a34a;
+}
+
+.aviso-error {
+  border-left-color: #dc2626;
+}
+
+.aviso button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: inherit;
+  opacity: 0.5;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px;
+}
+
+.aviso button:hover {
+  opacity: 1;
+}
+
+@keyframes aviso-entrada {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aviso {
+    animation: none;
+  }
+}

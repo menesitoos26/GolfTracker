@@ -1,0 +1,435 @@
+/* =========================================================
+   COMPONENTES REUTILIZABLES - GOLFTRACKER
+   Todo lo que se repite entre pantallas vive aquí, para que
+   cada página sólo tenga su CSS específico (o ninguno).
+   ========================================================= */
+
+/* ---------------------------------------------- estructura */
+
+.pagina {
+  min-height: 100vh;
+  background-color: var(--verde-oscuro);
+  padding-bottom: 60px;
+}
+
+.contenedor {
+  width: min(1120px, 100% - 40px);
+  margin: 0 auto;
+}
+
+.pagina-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 36px 0 24px;
+}
+
+.pagina-cabecera h1 {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 800;
+  color: var(--texto-claro);
+}
+
+.pagina-cabecera p {
+  margin: 6px 0 0;
+  color: var(--texto-tenue);
+  font-size: 15px;
+}
+
+.seccion {
+  margin-bottom: 28px;
+}
+
+.seccion-titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--texto-claro);
+  margin-bottom: 14px;
+}
+
+/* ---------------------------------------------- tarjetas */
+
+.tarjeta {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radio-md);
+  padding: 22px;
+  backdrop-filter: blur(6px);
+}
+
+.tarjeta-clara {
+  background-color: #ffffff;
+  border: none;
+  color: var(--verde-profundo);
+  box-shadow: var(--sombra-tarjeta);
+}
+
+.tarjeta-clara h1,
+.tarjeta-clara h2,
+.tarjeta-clara h3 {
+  color: var(--verde-profundo);
+}
+
+/* ---------------------------------------------- métricas */
+
+.rejilla-metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+}
+
+.metrica {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radio-md);
+  padding: 18px 20px;
+}
+
+.metrica-etiqueta {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--texto-tenue);
+  margin-bottom: 8px;
+}
+
+.metrica-valor {
+  font-family: var(--fuente-titulos);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--texto-claro);
+  line-height: 1.1;
+}
+
+.metrica-nota {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--texto-tenue);
+}
+
+/* ---------------------------------------------- botones */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: var(--radio-pill);
+  padding: 11px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, background-color 0.18s ease, opacity 0.18s ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--verde-acento);
+  outline-offset: 2px;
+}
+
+.btn-primario {
+  background-color: var(--verde-brillante);
+  color: var(--verde-profundo);
+}
+
+.btn-primario:hover:not(:disabled) {
+  background-color: #ffffff;
+}
+
+.btn-secundario {
+  background-color: transparent;
+  color: var(--texto-claro);
+  border: 2px solid rgba(244, 247, 242, 0.55);
+}
+
+.btn-secundario:hover:not(:disabled) {
+  background-color: rgba(244, 247, 242, 0.12);
+}
+
+.btn-peligro {
+  background-color: transparent;
+  color: var(--color-error);
+  border: 2px solid rgba(255, 107, 107, 0.5);
+}
+
+.btn-peligro:hover:not(:disabled) {
+  background-color: rgba(255, 107, 107, 0.14);
+}
+
+.btn-pequeno {
+  padding: 7px 16px;
+  font-size: 13px;
+}
+
+.btn-texto {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--verde-brillante);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-texto:hover {
+  text-decoration: underline;
+}
+
+/* ---------------------------------------------- formularios */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-tenue);
+}
+
+.campo-ayuda {
+  font-size: 12px;
+  color: var(--texto-tenue);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: var(--radio-sm);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background-color: rgba(0, 0, 0, 0.22);
+  color: var(--texto-claro);
+  font-size: 15px;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  outline: none;
+  border-color: var(--verde-suave);
+  box-shadow: 0 0 0 3px rgba(96, 166, 103, 0.28);
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder {
+  color: rgba(244, 247, 242, 0.4);
+}
+
+.campo select option {
+  background-color: var(--verde-profundo);
+  color: var(--texto-claro);
+}
+
+.campo textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.campo-error input,
+.campo-error select {
+  border-color: var(--color-error);
+}
+
+.fila-campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.mensaje-error {
+  color: var(--color-error);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.acciones-formulario {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* ---------------------------------------------- tablas */
+
+.tabla-envoltorio {
+  overflow-x: auto;
+  border-radius: var(--radio-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 560px;
+}
+
+.tabla thead th {
+  position: sticky;
+  top: 0;
+  background-color: var(--verde-header);
+  color: var(--texto-claro);
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 13px 12px;
+  white-space: nowrap;
+}
+
+.tabla tbody td {
+  padding: 12px;
+  text-align: center;
+  color: var(--texto-claro);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tabla tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tabla .alinear-izquierda {
+  text-align: left;
+}
+
+.tabla-clicable tbody tr {
+  cursor: pointer;
+}
+
+.texto-fuerte {
+  font-weight: 700;
+}
+
+.texto-tenue {
+  color: var(--texto-tenue);
+}
+
+/* ---------------------------------------------- resultados */
+
+.resultado-sobre-par {
+  color: #ffb4b4;
+  font-weight: 700;
+}
+
+.resultado-bajo-par {
+  color: var(--verde-acento);
+  font-weight: 700;
+}
+
+.resultado-par {
+  color: var(--texto-claro);
+  font-weight: 700;
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 3px 11px;
+  border-radius: var(--radio-pill);
+  font-size: 12px;
+  font-weight: 700;
+  background-color: rgba(193, 233, 182, 0.18);
+  color: var(--verde-brillante);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------- estados */
+
+.estado-vacio {
+  text-align: center;
+  padding: 52px 24px;
+  color: var(--texto-tenue);
+}
+
+.estado-vacio-icono {
+  font-size: 42px;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.estado-vacio h3 {
+  color: var(--texto-claro);
+  font-size: 19px;
+  margin-bottom: 8px;
+}
+
+.estado-vacio p {
+  margin: 0 auto 22px;
+  max-width: 380px;
+  line-height: 1.55;
+}
+
+.cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 52px 20px;
+  color: var(--texto-tenue);
+}
+
+.cargando-rueda {
+  width: 34px;
+  height: 34px;
+  border: 3px solid rgba(244, 247, 242, 0.2);
+  border-top-color: var(--verde-brillante);
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cargando-rueda {
+    animation-duration: 3s;
+  }
+  .btn:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Sólo visible para lectores de pantalla */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
